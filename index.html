@@ -415,6 +415,32 @@ const CHANGELOG_DATA = [
     monthId: "2026-04",
     releases: [
       {
+        version: "v2026.4.8",
+        date: "2026-04-08",
+        features: [
+          { title: "多渠道插件加载修复", tag: "修复", summary: "打包路径导致启动失败", detail: "修复 Telegram、BlueBubbles、Feishu 等内置渠道在 npm 安装后启动时导入缺失 dist/extensions 文件的崩溃问题，统一通过打包的顶层 sidecar 加载密钥合约。" },
+          { title: "Slack 代理支持", tag: "修复", summary: "Socket Mode 支持 HTTP 代理", detail: "Slack Socket Mode WebSocket 连接现在遵循环境变量中的 HTTP/HTTPS 代理设置，包括 NO_PROXY 排除，无需手动补丁即可在纯代理环境中连接。" },
+          { title: "Agent 进度工具兼容", tag: "修复", summary: "OpenAI 系 update_plan 可用", detail: "保持 update_plan 在 OpenAI 系模型运行中可用，返回紧凑的成功载荷，并允许通过 tools.experimental.planTool=false 退出。" },
+          { title: "网络代理 DNS 修复", tag: "修复", summary: "代理模式跳过目标 DNS 固定", detail: "在受信代理模式下跳过目标 DNS 固定，让纯代理沙箱可以由受信代理解析出站主机。" }
+        ]
+      },
+      {
+        version: "v2026.4.7",
+        date: "2026-04-08",
+        features: [
+          { title: "openclaw infer 命令", tag: "新功能", summary: "统一推理工作流入口", detail: "新增 openclaw infer 命令中心，统一提供商支持的模型、媒体、网页和嵌入推理工作流，提供一致的 CLI 体验。" },
+          { title: "媒体生成自动降级", tag: "新功能", summary: "跨提供商智能切换", detail: "图片/音乐/视频生成在提供商不可用时自动降级到备选提供商，自动适配尺寸/比例/时长等参数差异，保持创作意图不丢失。" },
+          { title: "Memory Wiki 回归", tag: "新功能", summary: "结构化知识库恢复", detail: "恢复内置 memory-wiki 插件，包含 CLI 工具、结构化 claim/evidence 字段、矛盾检测集群、新鲜度仪表板和加权搜索。" },
+          { title: "Webhook 入口插件", tag: "新功能", summary: "外部自动化驱动 TaskFlow", detail: "新增内置 webhook 入口插件，外部自动化可通过路由级共享密钥端点创建和驱动绑定的 TaskFlow。" },
+          { title: "压缩检查点", tag: "新功能", summary: "会话压缩前后可恢复", detail: "新增持久化压缩检查点和 Sessions UI 分支/恢复操作，支持检查和恢复压缩前的会话状态。压缩管线支持插件替换。" },
+          { title: "Gemma 4 支持", tag: "新功能", summary: "Google Gemma 4 模型接入", detail: "新增 Google Gemma 4 模型支持，保持 Google 降级解析在请求的提供商路径上，原生 Gemma 路由再次可用。" },
+          { title: "Arcee AI 提供商", tag: "新功能", summary: "新 AI 提供商接入", detail: "新增 Arcee AI 提供商插件，包含 Trinity 目录条目、OpenRouter 支持和更新的入门/认证指南。" },
+          { title: "Memory Dreaming 增强", tag: "优化", summary: "支持脱敏会话转录", detail: "Memory Dreaming 现在可摄入脱敏的会话转录，支持每日会话语料笔记、游标检查点和提升/修复支持。" },
+          { title: "Ollama 视觉能力检测", tag: "优化", summary: "自动识别视觉模型", detail: "Ollama 现在从 /api/show 响应检测视觉能力，自动为支持的模型开启图片输入，无需手动配置。" },
+          { title: "Discord 活动封面图", tag: "新功能", summary: "event-create 支持封面图", detail: "Discord event-create 现在接受封面图 URL 或本地文件路径，支持 PNG/JPG/GIF 格式，自动编码为 Discord API 所需的图片载荷。" }
+        ]
+      },
+      {
         version: "v2026.4.6",
         date: "2026-04-06",
         features: [
