@@ -89,7 +89,7 @@ push 后 GitHub Actions 会自动部署到 GitHub Pages。
 ## 注意事项
 
 - `gh` CLI 路径：`/tmp/gh_2.67.0_linux_amd64/bin/gh`
-- GitHub 仓库：`alloevil/openlaw-changelog`
+- GitHub 仓库：`alloevil/openclaw-changelog`
 - OpenClaw 仓库：`openclaw/openclaw`
 - 翻质量很重要——直接机翻效果差，需要理解功能后重新用中文表述
 - 如果 release body 内容过多，优先翻译 Breaking 和重要 Changes
