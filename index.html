@@ -415,6 +415,45 @@ const CHANGELOG_DATA = [
     monthId: "2026-04",
     releases: [
       {
+        version: "v2026.4.11",
+        date: "2026-04-12",
+        features: [
+          { title: "Dreaming 导入 ChatGPT 聊天", tag: "新功能", summary: "支持 ChatGPT 导入和 Memory Palace", detail: "Dreaming/memory-wiki 新增 ChatGPT 导入摄入功能，以及"导入洞察"和"记忆宫殿"日记子标签页，可直接从 UI 查看导入的源聊天、编译的 wiki 页面和完整源页面。" },
+          { title: "视频生成增强", tag: "新功能", summary: "URL 交付、参考音频、自适应比例", detail: "video_generate 工具新增 URL 交付模式、referenceAudio 输入、资源角色提示、自适应宽高比支持和更高的图片输入上限，让视频提供商可以暴露更丰富的生成模式。" },
+          { title: "飞书文档评论增强", tag: "优化", summary: "文档评论会话上下文更丰富", detail: "飞书文档评论会话改进上下文解析、评论表情回复和打字反馈，让文档线程对话更接近聊天体验。" },
+          { title: "Microsoft Teams 表情回复", tag: "新功能", summary: "表情回复和分页支持", detail: "Microsoft Teams 新增表情回复支持、回复列表、Graph 分页和委派 OAuth 设置，同时保留应用认证的读取路径。" },
+          { title: "Ollama 模型缓存", tag: "优化", summary: "减少重复的 /api/show 请求", detail: "Ollama 在模型发现期间缓存 /api/show 的上下文窗口和能力元数据，重复刷新选择器不再重复获取未变化的模型。" },
+          { title: "Codex OAuth 修复", tag: "修复", summary: "修复新登录 invalid_scope 错误", detail: "修复 OpenAI/Codex OAuth 在新登录时重写上游授权 URL scope 导致 invalid_scope 失败的问题。" },
+          { title: "音频转录修复", tag: "修复", summary: "OpenAI 兼容的多部分请求", detail: "仅对 OpenAI 兼容的多部分请求禁用固定 DNS，同时保持主机名验证，使 OpenAI、Groq 和 Mistral 转录再次正常工作。" }
+        ]
+      },
+      {
+        version: "v2026.4.10",
+        date: "2026-04-11",
+        features: [
+          { title: "Codex 内置提供商", tag: "新功能", summary: "codex/gpt-* 使用 Codex 原生认证", detail: "新增内置 Codex 提供商和插件应用服务器框架，codex/gpt-* 模型使用 Codex 管理的认证、原生线程、模型发现和压缩，openai/gpt-* 保持正常 OpenAI 路径。" },
+          { title: "Active Memory 插件", tag: "新功能", summary: "主回复前自动检索相关记忆", detail: "新增可选 Active Memory 插件，在主回复前给 OpenClaw 一个专用的记忆子 Agent，自动拉取相关偏好、上下文和过往细节，无需用户手动说"记住"或"搜索记忆"。" },
+          { title: "macOS MLX 本地语音", tag: "新功能", summary: "Talk Mode 实验性本地语音", detail: "macOS Talk Mode 新增实验性本地 MLX 语音提供商，支持显式提供商选择、本地语音播放、中断处理和系统语音降级。" },
+          { title: "Seedance 2.0 视频模型", tag: "新功能", summary: "新增 Seedance 2.0 模型引用", detail: "在 fal 提供商中新增 Seedance 2.0 模型引用，包含提供商特定的时长、分辨率、音频和种子元数据字段。" },
+          { title: "Teams 消息操作", tag: "新功能", summary: "pin/unpin/read/react", detail: "Microsoft Teams 新增消息操作：pin、unpin、read、react 和回复列表。" },
+          { title: "QA 测试矩阵", tag: "新功能", summary: "Matrix 和 Telegram 自动化测试", detail: "新增 openclaw qa matrix（基于一次性 Matrix homeserver）和 openclaw qa telegram（私有群组 bot-to-bot 测试）自动化测试通道。" },
+          { title: "CLI exec-policy 命令", tag: "新功能", summary: "本地执行策略管理", detail: "新增 openclaw exec-policy 命令，包含 show、preset 和 set 子命令，用于同步 tools.exec.* 配置与本地执行审批文件。" }
+        ]
+      },
+      {
+        version: "v2026.4.9",
+        date: "2026-04-09",
+        features: [
+          { title: "Dreaming REM 回填", tag: "新功能", summary: "历史日记重放到 Dreams", detail: "新增基于历史的 REM 回填通道，支持 rem-harness --path、日记提交/重置流、持久事实提取和实时短期提升集成，旧的每日笔记可以重放到 Dreams 和持久记忆中。" },
+          { title: "Dreaming 日记视图", tag: "新功能", summary: "结构化日记和场景通道", detail: "Control UI 新增结构化日记视图，包含时间线导航、回填/重置控制、可追溯的 Dreaming 摘要和 Grounded Scene 通道，支持分阶段回填信号的安全清理。" },
+          { title: "提供商认证别名", tag: "优化", summary: "变体共享认证配置", detail: "提供商清单可声明 providerAuthAliases，让提供商变体共享环境变量、认证配置文件和 API 密钥设置，无需核心特定的连接代码。" },
+          { title: "iOS 版本管理", tag: "优化", summary: "CalVer + TestFlight 流程", detail: "iOS 发布版本固定为显式 CalVer，TestFlight 迭代保持相同短版本直到维护者有意提升，新增 pnpm ios:version:pin 工作流。" },
+          { title: "浏览器 SSRF 防护", tag: "修复", summary: "交互后重新运行安全检查", detail: "在点击、evaluate、钩子触发点击和批量操作流驱动的主框架导航后重新运行阻塞目标安全检查，防止浏览器交互绕过 SSRF 隔离。" },
+          { title: ".env 安全加固", tag: "修复", summary: "阻断不受信任的 .env 注入", detail: "阻止不受信任的工作区 .env 文件注入运行时控制环境变量、浏览器控制覆盖和跳过服务器的环境变量，拒绝不安全的 URL 样式覆盖。" },
+          { title: "Android 配对修复", tag: "修复", summary: "QR 扫描重新配对", detail: "新 QR 扫描时清除旧的设置码认证，从新配对引导操作员和节点会话，配对自动重试在应用后台时暂停。" }
+        ]
+      },
+      {
         version: "v2026.4.8",
         date: "2026-04-08",
         features: [
