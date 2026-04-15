@@ -415,6 +415,33 @@ const CHANGELOG_DATA = [
     monthId: "2026-04",
     releases: [
       {
+        version: "v2026.4.14",
+        date: "2026-04-14",
+        features: [
+          { title: "GPT-5.4 Pro 前向兼容", tag: "新功能", summary: "支持 gpt-5.4-pro 模型", detail: "OpenAI Codex 新增 gpt-5.4-pro 前向兼容支持，包含定价/限制和列表/状态可见性，无需等待上游目录更新。" },
+          { title: "Telegram 论坛主题名", tag: "优化", summary: "Agent 上下文中显示人类可读主题名", detail: "Telegram 论坛主题现在从论坛服务消息学习人类可读名称，在 Agent 上下文、提示元数据和插件钩子元数据中展示。" },
+          { title: "Ollama 超时修复", tag: "修复", summary: "本地 Ollama 运行超时不再被截断", detail: "将配置的嵌入运行超时转发到全局 undici 流超时设置，慢速本地 Ollama 运行不再继承默认流截断值。" },
+          { title: "Codex 模型目录修复", tag: "修复", summary: "修复 models.json 丢失自定义模型", detail: "在 Codex 提供商目录输出中包含 apiKey，Pi ModelRegistry 验证器不再因此拒绝条目并静默丢弃所有提供商的自定义模型。" },
+          { title: "图片/PDF 工具模型引用修复", tag: "修复", summary: "Ollama 视觉模型不再被误拒绝", detail: "在媒体工具注册表查找前规范化配置的提供商/模型引用，图片和 PDF 工具不再因为跳过了常规模型引用规范化步骤而拒绝有效的 Ollama 视觉模型。" },
+          { title: "Slack 交互安全加固", tag: "修复", summary: "allowFrom 应用到交互事件", detail: "将全局 allowFrom 所有者允许列表应用到 Slack 的 block-action 和模态交互事件，要求预期发送者 ID 交叉验证，防止交互触发绕过允许列表意图。" },
+          { title: "网关工具安全拦截", tag: "修复", summary: "阻止模型开启危险标志", detail: "网关工具拒绝来自模型的 config.patch/apply 调用开启安全审计标记的任何标志（如 dangerouslyDisableDeviceAuth），已启用的标志不受影响。" }
+        ]
+      },
+      {
+        version: "v2026.4.12",
+        date: "2026-04-13",
+        features: [
+          { title: "Active Memory 插件", tag: "新功能", summary: "主回复前自动检索相关记忆", detail: "新增可选 Active Memory 插件，在主回复前给 OpenClaw 一个专用的记忆子 Agent，自动拉取相关偏好、上下文和过往细节，支持消息/最近/全文三种上下文模式。" },
+          { title: "macOS MLX 本地语音", tag: "新功能", summary: "Talk Mode 实验性本地语音", detail: "macOS Talk Mode 新增实验性本地 MLX 语音提供商，支持显式提供商选择、本地语音播放、中断处理和系统语音降级。" },
+          { title: "CLI exec-policy 命令", tag: "新功能", summary: "本地执行策略管理", detail: "新增 openclaw exec-policy 命令，包含 show、preset 和 set 子命令，用于同步 tools.exec.* 配置与本地执行审批文件。" },
+          { title: "网关命令发现 RPC", tag: "新功能", summary: "远程客户端发现运行时命令", detail: "新增 commands.list RPC，远程网关客户端可以发现运行时原生、文本、技能和插件命令，包含带表面感知命名和序列化的参数元数据。" },
+          { title: "私有网络 OpenAI 兼容端点", tag: "新功能", summary: "受信任的自托管端点支持", detail: "新增每个提供商的 allowPrivateNetwork 配置，支持受信任的自托管 OpenAI 兼容端点，仅限模型请求表面生效。" },
+          { title: "QA 多通道测试", tag: "新功能", summary: "Matrix/Telegram/Multipass 测试", detail: "新增 openclaw qa matrix（一次性 Matrix homeserver）、openclaw qa telegram（凭证租赁）和 --runner multipass（一次性 Linux VM）测试通道。" },
+          { title: "文档国际化改进", tag: "优化", summary: "翻译质量和稳定性", detail: "改进文档翻译流水线：分块翻译原始文档、拒绝截断的标签输出、避免歧义的 body-only 包装器解包，以及从终止的 Pi 翻译会话中恢复。" },
+          { title: "Matrix 部分流式标记", tag: "新功能", summary: "客户端渲染打字机动画", detail: "Matrix 部分流式发送新增 MSC4357 实时标记，支持的 Matrix 客户端可以渲染实时/打字机动画。" }
+        ]
+      },
+      {
         version: "v2026.4.11",
         date: "2026-04-12",
         features: [
