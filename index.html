@@ -416,6 +416,46 @@ const CHANGELOG_DATA = [
     monthId: "2026-04",
     releases: [
       {
+        version: "v2026.4.22",
+        date: "2026-04-23",
+        features: [
+          { title: "xAI 图像生成、语音合成和语音转文字", tag: "新功能", summary: "xAI 全面支持图像/TTS/STT", detail: "xAI 新增图像生成（grok-imagine-image / grok-imagine-image-pro）、参考图编辑、六种实时语音、MP3/WAV/PCM/G.711 TTS 格式、grok-stt 音频转录，以及 xAI 实时转录用于 Voice Call 流式通话。" },
+          { title: "本地 TUI 嵌入模式", tag: "新功能", summary: "无需 Gateway 即可运行终端对话", detail: "TUI 新增本地嵌入模式，可在不启动 Gateway 的情况下运行终端对话，同时保留插件审批门控。" },
+          { title: "安装向导自动安装缺失插件", tag: "新功能", summary: "首次配置无需手动恢复插件", detail: "安装向导现在会自动安装缺失的提供商和渠道插件，首次运行配置无需手动恢复插件即可完成。" },
+          { title: "/models add 在线注册模型", tag: "新功能", summary: "聊天中直接注册模型无需重启", detail: "新增 /models add <provider> <modelId> 命令，可在聊天中直接注册模型并立即使用，无需重启 Gateway。" },
+          { title: "WhatsApp 原生引用回复和群组系统指令", tag: "新功能", summary: "可配置的引用回复和群组行为指令", detail: "WhatsApp 新增 replyToMode 可配置原生引用回复；群组和私聊支持 per-group/per-direct systemPrompt，注入每次对话的行为指令，支持通配符回退。" },
+          { title: "腾讯云提供商插件", tag: "新功能", summary: "内置腾讯云 TokenHub 接入", detail: "新增腾讯云提供商插件，支持 TokenHub 入驻、文档、hy3-preview 模型目录和分级 Hy3 定价。" },
+          { title: "大量插件热重载免重启生效", tag: "修复", summary: "多种插件配置实时生效", detail: "Memory LanceDB、Active Memory、GitHub Copilot、Ollama、OpenAI、Amazon Bedrock、Codex、Skill Workshop 等插件的发现/记忆/钩子配置现在支持热重载，切换配置后无需重启即生效。" },
+          { title: "WhatsApp 出站消息去重", tag: "修复", summary: "防止重连后重复发送定时消息", detail: "WhatsApp 出站发送时保持内存级活跃投递声明，防止并发重连时重新驱动同一待发队列条目，修复 30 分钟静默看门狗触发后定时消息重复发送 7-12 次的问题。" }
+        ]
+      },
+      {
+        version: "v2026.4.21",
+        date: "2026-04-22",
+        features: [
+          { title: "图像生成默认升级到 gpt-image-2", tag: "新功能", summary: "OpenAI 图像生成模型升级", detail: "OpenAI 图像生成提供商和实时媒体测试默认切换到 gpt-image-2，文档和工具元数据中新增 2K/4K 尺寸提示。" },
+          { title: "插件依赖自修复", tag: "修复", summary: "doctor 路径自动修复缺失依赖", detail: "doctor 修复打包安装中捆绑插件运行时依赖，无需安装广泛的核心依赖即可恢复缺失的渠道/提供商依赖。" },
+          { title: "Owner 命令身份验证加固", tag: "修复", summary: "非 Owner 无法绕过命令限制", detail: "Owner 命令现在要求 owner-candidate 匹配或 operator.admin 身份，不再将通配符 allowFrom 或空列表视为充分条件，防止非 Owner 发送者通过宽松回退访问 Owner-only 命令。" },
+          { title: "浏览器无效引用即时拒绝", tag: "修复", summary: "拒绝无效的 ax<N> 无障碍引用", detail: "浏览器 act 路径现在会立即拒绝无效的 ax<N> 无障碍引用，不再等待浏览器操作超时。" },
+          { title: "npm 弃用依赖链清理", tag: "修复", summary: "消除 node-domexception 警告", detail: "将 node-domexception 别名镜像到根 package.json overrides，npm 安装不再出现已弃用的 google-auth-library → gaxios → node-fetch 依赖链警告。" },
+          { title: "Slack 线程别名保持", tag: "修复", summary: "运行时发送保持线程别名", detail: "Slack 运行时出站发送现在保持线程别名，当调用者提供 threadTs 时通用运行时发送会留在目标 Slack 线程中。" }
+        ]
+      },
+      {
+        version: "v2026.4.20",
+        date: "2026-04-21",
+        features: [
+          { title: "引导设置界面改版", tag: "新功能", summary: "安全提示改用黄色横幅和清单", detail: "安装向导安全免责声明改用单一黄色警告横幅、分段标题和要点清单，模型目录加载时显示加载指示器，API 密钥提示新增占位符。" },
+          { title: "Agent 系统提示全面强化", tag: "新功能", summary: "默认系统提示增加完成偏好和验证", detail: "默认系统提示和 OpenAI GPT-5 覆盖层新增更明确的完成偏好、实时状态检查、弱结果恢复和最终前验证指导。" },
+          { title: "Moonshot Kimi K2.6 默认模型", tag: "新功能", summary: "Kimi K2.6 成为默认模型", detail: "Moonshot/Kimi 默认捆绑设置、网页搜索和媒体理解切换到 kimi-k2.6，kimi-k2.5 仍可用于兼容。支持 thinking.keep = all。" },
+          { title: "会话维护自动清理", tag: "新功能", summary: "默认强制执行条目上限和过期清理", detail: "会话维护默认强制执行内置条目上限和过期清理，启动时裁剪超大存储，防止累积的 cron/executor 会话积压在写入路径运行前导致 Gateway OOM。" },
+          { title: "Cron 运行时状态分离", tag: "新功能", summary: "jobs.json 稳定用于 Git 追踪", detail: "Cron 将运行时执行状态分离到 jobs-state.json，使 jobs.json 保持稳定，适合 Git 追踪的作业定义。" },
+          { title: "QQBot SSRF 防护", tag: "修复", summary: "直接上传 URL 路径增加 SSRF 防护", detail: "QQBot uploadC2CMedia 和 uploadGroupMedia 的直接上传 URL 路径新增 SSRF 防护。" },
+          { title: "会话成本重复计算修复", tag: "修复", summary: "成本快照不再被重复累加", detail: "会话 estimatedCostUsd 现在像 token 计数器一样快照，重复持久化路径不再将同一运行成本累加数十倍。" },
+          { title: "Ollama 推理控制修复", tag: "修复", summary: "thinking 控制转发到原生请求", detail: "OpenClaw thinking 控制现在转发到 Ollama 原生 /api/chat 请求的顶层 think 参数，/think off 和 --thinking off 在 qwen3 等模型上正常抑制推理。" }
+        ]
+      },
+      {
         version: "v2026.4.15",
         date: "2026-04-16",
         features: [
