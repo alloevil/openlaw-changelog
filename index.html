@@ -416,6 +416,46 @@ const CHANGELOG_DATA = [
     monthId: "2026-04",
     releases: [
       {
+        version: "v2026.4.26",
+        date: "2026-04-28",
+        features: [
+          { title: "Cerebras 提供商插件", tag: "新功能", summary: "内置 Cerebras 推理提供商", detail: "新增 Cerebras 作为捆绑插件，支持入驻向导、静态模型目录、文档和端点元数据。" },
+          { title: "Matrix 端到端加密设置", tag: "新功能", summary: "一键启用 Matrix 加密", detail: "新增 openclaw matrix encryption setup 命令，一键启用 Matrix 端到端加密、引导恢复密钥并打印验证状态。" },
+          { title: "Claude/Hermes 迁移工具", tag: "新功能", summary: "一键迁移 Claude Code 和 Hermes 配置", detail: "新增 openclaw migrate 命令，支持预览和应用 Claude Code/Deskstop 指令、MCP 服务器、技能和命令提示；内置 Hermes 迁移器，支持配置、记忆/插件提示、模型提供商、MCP 服务器和凭据迁移，支持计划、干运行、JSON 输出和迁移前备份。" },
+          { title: "控制面板配置差异面板", tag: "新功能", summary: "JSON5 配置变更实时对比", detail: "Control UI 新增原始配置差异面板，解析 JSON5、脱敏敏感值直到手动揭示，避免打开面板时触发虚假的编辑回调。" },
+          { title: "会话压缩预检触发器", tag: "新功能", summary: "JSONL 过大时自动触发压缩", detail: "新增 opt-in 的 maxActiveTranscriptBytes 配置，当活跃 JSONL 过大时自动运行本地压缩，要求转录轮换使成功压缩后未来对话写入更小的后续文件，而非原始字节分割。" },
+          { title: "Gateway 启动大幅优化", tag: "优化", summary: "延迟加载减少启动内存", detail: "Gateway 启动将 HTTP 认证、频道运行时、MCP 回环服务器、Cron 运行时等延迟到首次请求时加载，无插件启动的 RSS 显著降低。" },
+          { title: "大量 Ollama 修复", tag: "修复", summary: "上下文/思考/认证/超时全面修复", detail: "Ollama 修复包括：本地发现不再向 127.0.0.1:11434 发送意外探测、自定义 provider 前缀正确剥离、原生工具调用参数解析、think 思考级别映射、远程 baseURL 别名支持、本地/云认证隔离、模型请求超时传递、自定义输入模态保留等。" },
+          { title: "插件安装安全加固", tag: "修复", summary: "符号链接/测试文件/同名覆盖修复", detail: "插件安装安全扫描跳过测试文件但仍强制扫描声明的运行时入口点；允许精确的包管理器 peer 链接；支持 npm:<package> 安装前缀跳过 ClawHub 查找；抑制已追踪 npm 插件覆盖捆绑同名插件的重复警告。" }
+        ]
+      },
+      {
+        version: "v2026.4.25",
+        date: "2026-04-27",
+        features: [
+          { title: "TTS 全面升级", tag: "新功能", summary: "/tts latest 朗读、会话级自动 TTS", detail: "TTS 全面升级：新增 /tts latest 朗读支持（含重复抑制）、/tts chat on|off|default 会话级自动 TTS 覆盖、per-agent/per-account TTS 覆盖、以及 Azure Speech、小米、本地 CLI、Inworld、火山引擎和 ElevenLabs v3 提供商支持。" },
+          { title: "Azure Speech TTS 提供商", tag: "新功能", summary: "内置 Azure Speech 语音合成", detail: "新增 Azure Speech 作为捆绑 TTS 提供商，支持 Speech 资源认证、语音列表、SSML 转义、原生 Ogg/Opus 语音消息输出和电话输出。" },
+          { title: "OpenTelemetry 全面覆盖", tag: "新功能", summary: "可观测性扩展到模型调用和工具循环", detail: "OpenTelemetry 覆盖扩展到模型调用、token 使用、工具循环、harness 运行、exec 进程、出站投递、上下文组装和内存压力，使用有界低基数属性。" },
+          { title: "PWA/Web Push 通知", tag: "新功能", summary: "控制面板支持安装和推送通知", detail: "Control UI 新增 PWA 安装支持和 Gateway 聊天的 Web Push 通知。" },
+          { title: "Browser 自动化安全增强", tag: "新功能", summary: "安全 URL、iframe 感知、CDP 调优", detail: "浏览器自动化新增安全 URL 暴露、iframe 感知角色快照、CDP 就绪调优、一次性无头启动，以及 /browser doctor --deep 实时快照探测。" },
+          { title: "安装/更新安全加固", tag: "修复", summary: "多平台安装验证增强", detail: "安装/更新加固覆盖 Windows、macOS、Linux、Docker、捆绑插件运行时依赖、Node 服务重启、LaunchAgent 令牌轮换和混合版本 Gateway 验证。" },
+          { title: "插件启动路径优化", tag: "优化", summary: "冷持久化注册表减少扫描", detail: "插件启动和安装路径迁移到冷持久化注册表，减少广泛清单扫描，使插件更新、修复、提供商发现和安装元数据更加确定性。" }
+        ]
+      },
+      {
+        version: "v2026.4.24",
+        date: "2026-04-25",
+        features: [
+          { title: "Google Meet 集成", tag: "新功能", summary: "内置 Google Meet 参与者插件", detail: "Google Meet 作为捆绑参与者插件加入 OpenClaw，支持个人 Google 认证、Chrome/Twilio 实时会话、配对节点 Chrome 支持、会议记录/出席导出，以及已打开 Meet 标签页的恢复工具。" },
+          { title: "DeepSeek V4 Flash/Pro", tag: "新功能", summary: "DeepSeek V4 成为入驻默认模型", detail: "DeepSeek V4 Flash 和 V4 Pro 加入捆绑目录，V4 Flash 成为入驻默认模型，修复 DeepSeek thinking/replay 在后续工具调用轮次中的行为。" },
+          { title: "Realtime 语音循环", tag: "新功能", summary: "Talk/Voice Call/Meet 咨询完整 Agent", detail: "Talk、Voice Call 和 Google Meet 现在可以使用实时语音循环，咨询完整 OpenClaw Agent 获取更深层的工具支持回答。" },
+          { title: "Browser 坐标点击", tag: "新功能", summary: "视口坐标点击和 CLI 支持", detail: "浏览器自动化新增视口坐标点击（托管和现有会话），以及 openclaw browser click-coords CLI 命令。支持 per-profile headless 覆盖和 60 秒默认操作预算。" },
+          { title: "Plugin SDK 破坏性变更", tag: "Breaking", summary: "移除 Pi-only 兼容路径", detail: "移除 Pi-only 的 api.registerEmbeddedExtensionFactory(...) 兼容路径。捆绑工具结果重写必须使用 api.registerAgentToolResultMiddleware(...) 并声明目标 harness，确保转换在 Pi 和 Codex app-server 动态工具间一致运行。" },
+          { title: "启动基础设施轻量化", tag: "优化", summary: "静态模型目录、延迟依赖、修复打包安装", detail: "插件和模型基础设施在启动时更轻量：静态模型目录、清单支持的模型行、延迟提供商依赖，以及打包安装的外部运行时依赖修复。" },
+          { title: "Voice Call 设置和冒烟测试", tag: "新功能", summary: "voicecall setup 和 smoke 命令", detail: "Voice Call 新增 voicecall setup 和默认干运行的 voicecall smoke 命令，可在拨出测试电话前检查 Twilio/提供商就绪状态。" }
+        ]
+      },
+      {
         version: "v2026.4.22",
         date: "2026-04-23",
         features: [
