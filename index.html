@@ -509,6 +509,36 @@ body {
   max-height: none;
   opacity: 1;
 }
+.component-summary {
+  padding: 8px 16px 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.01);
+}
+.feature-single {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.feature-single:last-child { border-bottom: none; }
+.feature-single-title {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 500;
+  flex: 1;
+  min-width: 0;
+}
+.feature-single-detail {
+  width: 100%;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  padding-top: 4px;
+}
 
 /* ========== Compact Feature Item ========== */
 .feature-compact {
@@ -8092,17 +8122,31 @@ const CHANGELOG_DATA = [
         </div>`;
       }).join('');
 
-      // Single item: render directly without collapsible header
+      // Single item: render directly with full detail visible
       if (items.length === 1) {
-        return itemsHtml;
+        const tag = TAG_MAP[items[0].tag] || TAG_MAP['新功能'];
+        return `<div class="feature-single">
+          <span class="feature-tag ${tag.cls}" style="font-size:10px">${tag.label}</span>
+          <span class="feature-single-title">${esc(items[0].title)}</span>
+          <span class="feature-single-detail">${esc(items[0].detail)}</span>
+        </div>`;
       }
+
+      // Generate summary from detail text (first meaningful sentence of each item)
+      const summaryText = items.slice(0, 3).map(f => {
+        const text = f.detail || f.summary || '';
+        // Take first sentence up to first period/comma, max 80 chars
+        const firstSentence = text.split(/[.。]/)[0].trim();
+        return firstSentence.length > 100 ? firstSentence.slice(0, 100) + '...' : firstSentence;
+      }).join('; ');
 
       return `<div class="component-group">
         <div class="component-header" onclick="toggleComponent(this)">
           <span class="toggle-icon${expanded ? ' expanded' : ''}">▶</span>
           <span class="component-name">${esc(comp)}</span>
-          <span class="component-count">${items.length}</span>
+          <span class="component-count">${items.length} 项</span>
         </div>
+        <div class="component-summary">${esc(summaryText)}</div>
         <div class="component-items${expanded ? ' expanded' : ''}">
           ${itemsHtml}
         </div>
