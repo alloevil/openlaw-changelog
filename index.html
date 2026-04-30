@@ -8036,12 +8036,23 @@ const CHANGELOG_DATA = [
 
   /**
    * Extract component prefix from title.
-   * e.g. "Codex:" → "Codex", "Channels/QQBot:" → "Channels/QQBot",
-   * "Reliability fixes cover Telegram" → null
+   * Handles formats like:
+   *   "Plugin SDK: expose ..." → "Plugin SDK"
+   *   "Codex Computer Use setup now ships with" → "Codex"
+   *   "Sandbox/Docker: add..." → "Sandbox/Docker"
+   *   "DeepInfra joins the bundled provider set" → "DeepInfra"
    */
   function extractComponent(title) {
-    const m = title.match(/^([A-Za-z][\w/.-]*?)\s*[:：]\s/);
-    return m ? m[1] : null;
+    // Try colon-separated prefix: "Component: description"
+    const colonM = title.match(/^([A-Za-z][\w/.-]*(?:\s+[A-Za-z][\w/.-]*)*)\s*[:：]\s/);
+    if (colonM) {
+      const prefix = colonM[1].trim();
+      // Keep as-is if it contains slash (module path) or is short enough
+      if (prefix.includes('/') || prefix.split(/\s+/).length <= 3) return prefix;
+    }
+    // Otherwise: extract first capitalized word (the actual component/SDK name)
+    const wordM = title.match(/^([A-Z][a-zA-Z0-9]+(?:\/[A-Z][a-zA-Z0-9]+)*)/);
+    return wordM ? wordM[1] : null;
   }
 
   /**
