@@ -176,6 +176,32 @@ body {
   margin-bottom: 28px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+
+.month-header .toggle-icon {
+  font-size: 16px;
+  color: var(--text-muted);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.month-header .toggle-icon.expanded {
+  transform: rotate(90deg);
+}
+
+.month-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.month-content.expanded {
+  max-height: none;
+  opacity: 1;
 }
 
 .month-tag {
@@ -7784,7 +7810,7 @@ const CHANGELOG_DATA = [
 
   function renderChangelog() {
     const container = document.getElementById('changelog');
-    container.innerHTML = CHANGELOG_DATA.map(month => {
+    container.innerHTML = CHANGELOG_DATA.map((month, idx) => {
       const releaseCount = month.releases.reduce((sum, r) => sum + r.features.length, 0);
 
       const releasesHtml = month.releases.map(release => {
@@ -7799,13 +7825,18 @@ const CHANGELOG_DATA = [
           </div>`;
       }).join('');
 
+      const isExpanded = idx === 0;
+
       return `
         <section class="month-section" id="${month.monthId}">
-          <div class="month-header">
+          <div class="month-header" onclick="toggleMonth(this)">
+            <span class="toggle-icon ${isExpanded ? 'expanded' : ''}">▶</span>
             <span class="month-tag">${esc(month.month)}</span>
             <span class="month-count">${month.releases.length} 个版本 · ${releaseCount} 项变更</span>
           </div>
-          ${releasesHtml}
+          <div class="month-content ${isExpanded ? 'expanded' : ''}">
+            ${releasesHtml}
+          </div>
         </section>`;
     }).join('');
   }
@@ -7819,6 +7850,14 @@ const CHANGELOG_DATA = [
   window.toggleCard = function(header) {
     const card = header.parentElement;
     card.classList.toggle('open');
+  };
+
+  window.toggleMonth = function(header) {
+    const section = header.parentElement;
+    const content = section.querySelector('.month-content');
+    const icon = header.querySelector('.toggle-icon');
+    content.classList.toggle('expanded');
+    icon.classList.toggle('expanded');
   };
 
   // Init
