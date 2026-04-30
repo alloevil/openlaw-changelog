@@ -209,10 +209,10 @@ function formatChangelogData(months) {
 
 function updateIndexHtml(months) {
   const html = readFileSync(INDEX_HTML, 'utf-8');
-  const dataRegex = /const CHANGELOG_DATA\s*=\s*\[[\s\S]*?\];/;
+  const dataRegex = /const CHANGELOG_DATA\s*=\s*\[[\s\S]*?^\];/m;
 
   const newArray = formatChangelogData(months);
-  const newHtml = html.replace(dataRegex, `const CHANGELOG_DATA = ${newArray};`);
+  const newHtml = html.replace(dataRegex, () => `const CHANGELOG_DATA = ${newArray};`);
 
   if (newHtml === html) {
     console.log('No CHANGELOG_DATA found in index.html, or content unchanged.');
