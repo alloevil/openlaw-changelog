@@ -23,6 +23,12 @@ const INDEX_HTML = join(ROOT, 'index.html');
 const REPO = 'openclaw/openclaw';
 const API_BASE = 'https://api.github.com';
 
+// AI summary config — reads from env, skips if not set
+const AI_BASE_URL = process.env.ANTHROPIC_BASE_URL;
+const AI_AUTH_TOKEN = process.env.ANTHROPIC_AUTH_TOKEN;
+const AI_MODEL = 'xiaomi/mimo-v2-pro';
+const AI_BATCH_SIZE = 20;
+
 // Tag mapping: section headers in release body → tag categories
 const SECTION_TAGS = {
   'Breaking': 'Breaking',
@@ -107,6 +113,89 @@ function parseFeatures(body) {
   }
 
   return features;
+}
+
+/**
+ * Generate Chinese user-friendly summaries via Anthropic API.
+ * Mutates feature objects in place, adding summaryZh field.
+ */
+async function generateSummaries(features) {
+  if (!AI_BASE_URL || !AI_AUTH_TOKEN) {
+    console.log('No AI API credentials found, skipping Chinese summary generation.');
+    return;
+  }
+
+  console.log(`\nGenerating Chinese summaries for ${features.length} features...`);
+
+  const systemPrompt = `你是技术文档翻译专家。为软件更新条目生成简洁的中文用户摘要。
+要求：
+1) 全部用中文
+2) 面向普通用户而非开发者
+3) 描述用户可感知的变更（新增功能、修复问题、体验改善）
+4) 不含代码片段、文件路径、PR 编号、技术实现细节
+5) 每条15-30字，简洁明了
+6) 如果原始内容是功能描述，说明这个功能对用户有什么用
+7) 如果原始内容是修复，说明修复了什么问题`;
+
+  for (let i = 0; i < features.length; i += AI_BATCH_SIZE) {
+    const batch = features.slice(i, i + AI_BATCH_SIZE);
+    const input = batch.map((f, idx) => ({
+      index: i + idx,
+      title: f.title,
+      detail: f.detail,
+    }));
+
+    try {
+      const res = await fetch(`${AI_BASE_URL}/v1/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': AI_AUTH_TOKEN,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model: AI_MODEL,
+          max_tokens: 2048,
+          system: systemPrompt,
+          messages: [{
+            role: 'user',
+            content: `请为以下更新条目生成中文摘要。返回JSON数组，每个元素格式：{"index": 序号, "summaryZh": "中文摘要"}\n\n${JSON.stringify(input, null, 2)}`,
+          }],
+        }),
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        console.warn(`  AI API error (batch ${i}): ${res.status} ${errText.slice(0, 200)}`);
+        continue;
+      }
+
+      const data = await res.json();
+      const text = data.content?.[0]?.text || '';
+
+      // Extract JSON from response (handle markdown code blocks)
+      const jsonMatch = text.match(/\[[\s\S]*\]/);
+      if (!jsonMatch) {
+        console.warn(`  Could not parse AI response for batch ${i}`);
+        continue;
+      }
+
+      const summaries = JSON.parse(jsonMatch[0]);
+      for (const s of summaries) {
+        if (features[s.index] && s.summaryZh) {
+          features[s.index].summaryZh = s.summaryZh;
+        }
+      }
+
+      const done = Math.min(i + AI_BATCH_SIZE, features.length);
+      console.log(`  ${done}/${features.length} features processed`);
+    } catch (err) {
+      console.warn(`  AI summary error (batch ${i}): ${err.message}`);
+    }
+  }
+
+  const withSummary = features.filter(f => f.summaryZh).length;
+  console.log(`  Generated ${withSummary}/${features.length} Chinese summaries.`);
 }
 
 async function fetchReleases() {
@@ -195,7 +284,7 @@ function formatChangelogData(months) {
   const monthStrs = months.map(month => {
     const releaseStrs = month.releases.map(release => {
       const featureStrs = release.features.map(f =>
-        `          { title: ${JSON.stringify(f.title)}, tag: ${JSON.stringify(f.tag)}, summary: ${JSON.stringify(f.summary)}, detail: ${JSON.stringify(f.detail)} }`
+        `          { title: ${JSON.stringify(f.title)}, tag: ${JSON.stringify(f.tag)}, summary: ${JSON.stringify(f.summary)}, detail: ${JSON.stringify(f.detail)}, summaryZh: ${JSON.stringify(f.summaryZh || null)} }`
       ).join(',\n');
 
       return `      {\n        version: ${JSON.stringify(release.version)},\n        date: ${JSON.stringify(release.date)},\n        features: [\n${featureStrs}\n        ]\n      }`;
@@ -247,6 +336,11 @@ async function main() {
       console.log('No releases with parseable features found. index.html not modified.');
       process.exit(0);
     }
+
+    // Generate Chinese summaries for latest release only
+    // (page shows one month at a time, summaries will be regenerated on next sync)
+    const latestFeatures = entries[0].features;
+    await generateSummaries(latestFeatures);
 
     const months = groupByMonth(entries);
     console.log(`\nGrouped into ${months.length} months:\n`);
