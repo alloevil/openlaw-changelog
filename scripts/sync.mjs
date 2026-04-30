@@ -236,7 +236,7 @@ async function main() {
     const entries = published
       .map(releaseToChangelogEntry)
       .filter(e => e.features.length > 0)
-      .sort((a, b) => b.version.localeCompare(a.version));
+      .sort((a, b) => b.date.localeCompare(a.date));
 
     console.log(`${entries.length} releases with parseable features:\n`);
     for (const e of entries) {
