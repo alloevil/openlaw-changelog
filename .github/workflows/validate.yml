@@ -1,0 +1,46 @@
+name: Validate JS Syntax
+
+on:
+  push:
+    branches: [master]
+    paths: ['index.html']
+  pull_request:
+    branches: [master]
+    paths: ['index.html']
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Extract and validate JS syntax
+        run: |
+          node -e "
+            const fs = require('fs');
+            const { execSync } = require('child_process');
+            const html = fs.readFileSync('index.html', 'utf-8');
+            const re = /<script>([\s\S]*?)<\/script>/g;
+            let m, idx = 0;
+            while ((m = re.exec(html)) !== null) {
+              idx++;
+              const body = m[1].trim();
+              if (!body) continue;
+              const tmp = '/tmp/validate_' + idx + '.js';
+              fs.writeFileSync(tmp, body);
+              try {
+                execSync('node --check ' + tmp, { stdio: 'pipe' });
+              } catch (e) {
+                console.error('❌ JS syntax error in <script> block #' + idx + ':');
+                console.error(e.stderr.toString());
+                process.exit(1);
+              }
+            }
+            console.log('✅ All ' + idx + ' script block(s) valid.');
+          "

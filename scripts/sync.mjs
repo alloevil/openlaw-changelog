@@ -15,6 +15,7 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -296,6 +297,34 @@ function formatChangelogData(months) {
   return `[\n${monthStrs}\n]`;
 }
 
+/**
+ * Validate that the generated JS in index.html is syntactically correct.
+ * Extracts all <script> blocks and runs `node --check` on each.
+ */
+function validateJsSyntax(html) {
+  const scriptRegex = /<script>([\s\S]*?)<\/script>/g;
+  let match;
+  let idx = 0;
+
+  while ((match = scriptRegex.exec(html)) !== null) {
+    idx++;
+    const scriptBody = match[1].trim();
+    if (!scriptBody) continue;
+
+    const tmpFile = `/tmp/changelog_validate_${idx}.js`;
+    writeFileSync(tmpFile, scriptBody, 'utf-8');
+
+    try {
+      execSync(`node --check ${tmpFile}`, { stdio: 'pipe' });
+    } catch (err) {
+      const stderr = err.stderr?.toString() || '';
+      throw new Error(`JS syntax error in <script> block #${idx}:\n${stderr}`);
+    }
+  }
+
+  console.log(`  Validated ${idx} <script> block(s) — syntax OK.`);
+}
+
 function updateIndexHtml(months) {
   const html = readFileSync(INDEX_HTML, 'utf-8');
   const dataRegex = /const CHANGELOG_DATA\s*=\s*\[[\s\S]*?^\];/m;
@@ -307,6 +336,9 @@ function updateIndexHtml(months) {
     console.log('No CHANGELOG_DATA found in index.html, or content unchanged.');
     return false;
   }
+
+  // Validate JS syntax before writing
+  validateJsSyntax(newHtml);
 
   writeFileSync(INDEX_HTML, newHtml, 'utf-8');
   return true;
