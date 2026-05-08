@@ -678,6 +678,20 @@ const CHANGELOG_DATA = [
     monthId: "2026-05",
     releases: [
       {
+        version: "v2026.5.7",
+        date: "2026-05-07",
+        features: [
+          { title: "Sessions 上下文缓存失效修复", tag: "修复", summary: "历史缩减或组装失败时自动失效缓存的上下文视图，避免重置前的过期历史被复用", detail: "Agents/context engine: invalidate cached assembled context views when source history shrinks or assembly fails, preventing stale pre-reset history from being reused. Fixes #77968. (#78163) Thanks @brokemac79 and @ChrisBot2026.", summaryZh: "历史缩减或组装失败时自动失效缓存的上下视图，避免重置前的过期历史被复用" },
+          { title: "Cron JSON 输出增加状态字段", tag: "新功能", summary: "cron list/show --json 输出包含 disabled/running/ok/error 等计算状态，外部工具可直接读取", detail: "Cron CLI: include computed `status` in `cron list --json` and `cron show --json` output so external tooling can read disabled/running/ok/error/skipped/idle state without reimplementing cron status derivation. (#78701) Thanks @aweiker.", summaryZh: "cron list/show --json 输出包含 disabled/running/ok/error 等计算状态，外部工具可直接读取" },
+          { title: "Discord 渠道消息路由修复", tag: "修复", summary: "解析 discord:channel:<id> 格式的目标为渠道发送，避免被误判为 DM 导致 Unknown Channel 错误", detail: "Discord/message: parse provider-prefixed targets like `discord:channel:<id>` as channel sends instead of legacy Discord DM targets, so cross-channel agent `message(action=\"send\")` calls no longer misroute channel IDs into misleading `Unknown Channel` failures. Fixes #78572.", summaryZh: "解析 discord:channel:<id> 格式的目标为渠道发送，避免被误判为 DM 导致 Unknown Channel 错误" },
+          { title: "Telegram 访问组权限修复", tag: "修复", summary: "DM、群组、原生命令和回调授权前检查 accessGroup:* 发送者白名单", detail: "Telegram: honor `accessGroup:*` sender allowlists for DMs, groups, native commands, and callback authorization before applying Telegram's numeric sender-ID checks. Fixes #78660. Thanks @manugc.", summaryZh: "DM、群组、原生命令和回调授权前检查 accessGroup:* 发送者白名单" },
+          { title: "WhatsApp 主动消息 LID 路由", tag: "修复", summary: "通过 Baileys LID 映射路由主动发送的电话号码消息，避免创建幽灵聊天", detail: "WhatsApp: route proactive phone-number sends through Baileys LID forward mappings when available, so LID-addressed contacts receive agent messages instead of creating sender-only ghost chats. Fixes #67378. (#74925) Thanks @edenfunf.", summaryZh: "通过 Baileys LID 映射路由主动发送的电话号码消息，避免创建幽灵聊天" },
+          { title: "子代理归档时间可配置", tag: "新功能", summary: "已完成的 session 子代理注册表条目支持 agents.defaults.subagents.archiveAfterMinutes 配置", detail: "Agents/subagents: have completed session-mode subagent registry rows honor `agents.defaults.subagents.archiveAfterMinutes` instead of a hardcoded 5-minute TTL, so registry-backed surfaces keep one retention knob across spawn modes. (#78263) Thanks @arniesaha.", summaryZh: "已完成的 session 子代理注册表条目支持 agents.defaults.subagents.archiveAfterMinutes 配置" },
+          { title: "Model providers 综合修复", tag: "修复", summary: "修复 APNG 上传规范化、Gemini 3 工具调用签名回放、旧版 __env__ 自定义 provider 键等多处问题", detail: "Model providers: normalize APNG sniffed PNG uploads, preserve Gemini 3 tool-call thought-signature replay with fallback signatures, accept legacy `__env__:VAR` custom-provider keys, and repair snake_case tool-call transcript sanitization. Fixes #51881, #48915, #77566, and #42858.", summaryZh: "修复 APNG 上传规范化、Gemini 3 工具调用签名回放、旧版 __env__ 自定义 provider 键等多处问题" },
+          { title: "Codex 审批模式优化", tag: "修复", summary: "停止默认安装 pre-guardian 原生权限钩子，支持会话内 allow-always 决策复用", detail: "Codex/approvals: in Codex approval modes, stop installing the pre-guardian native `PermissionRequest` hook by default so Codex's reviewer can approve safe commands before OpenClaw surfaces an approval, remember `allow-always` decisions for identical Codex native `PermissionRequest` payloads within the active session window, and make plugin approval requests validate/render their actual allowed decisions so Telegram and other native approval UIs cannot offer stale actions. Thanks @shakkernerd.", summaryZh: "停止默认安装 pre-guardian 原生权限钩子，支持会话内 allow-always 决策复用" },
+        ],
+      },
+      {
         version: "v2026.5.6",
         date: "2026-05-06",
         features: [
