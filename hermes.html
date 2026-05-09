@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hermes Agent Changelog</title>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -41,21 +42,25 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Header */
 .header {
   position: sticky; top: 0; z-index: 100;
   background: rgba(10, 10, 15, 0.82);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
 }
 
 .header-inner {
   max-width: 960px; margin: 0 auto; padding: 16px 24px;
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  flex-wrap: wrap;
 }
 
-.logo-area { display: flex; align-items: center; gap: 12px; }
+.logo-area { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
 
 .logo-icon {
   width: 36px; height: 36px;
@@ -68,19 +73,41 @@ body {
 .logo-text { font-size: 18px; font-weight: 600; color: var(--text-primary); }
 .logo-text span { color: var(--text-muted); font-weight: 400; margin-left: 6px; }
 
-.month-nav { display: flex; gap: 6px; flex-wrap: wrap; }
+/* Page nav (cross-page links) */
+.page-nav { display: flex; gap: 6px; flex-shrink: 0; }
+.page-nav a {
+  padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: 500;
+  color: var(--text-muted); background: var(--bg-secondary);
+  border: 1px solid var(--border); text-decoration: none;
+  transition: all var(--transition); white-space: nowrap;
+}
+.page-nav a:hover { color: var(--text-primary); border-color: var(--accent); }
+
+/* Month nav — scrollable on overflow */
+.month-nav-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.month-nav-wrap::-webkit-scrollbar { display: none; }
+
+.month-nav {
+  display: flex; gap: 6px; flex-wrap: nowrap; padding-bottom: 2px;
+}
 
 .month-pill {
   padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: 500;
   color: var(--text-secondary); background: var(--bg-secondary);
   border: 1px solid var(--border); text-decoration: none;
   transition: all var(--transition); white-space: nowrap; cursor: pointer;
+  flex-shrink: 0;
 }
 
-.month-pill:hover, .month-pill.active {
-  color: var(--text-primary); border-color: var(--accent); background: var(--accent-glow);
-}
+.month-pill:hover { color: var(--text-primary); border-color: var(--accent); background: var(--accent-glow); }
+.month-pill.active { color: var(--text-primary); border-color: var(--accent); background: var(--accent-glow); }
 
+/* Main */
 .main { max-width: 960px; margin: 0 auto; padding: 48px 24px 120px; }
 
 .hero { text-align: center; margin-bottom: 64px; }
@@ -88,51 +115,72 @@ body {
   font-size: 40px; font-weight: 700; letter-spacing: -0.5px;
   background: linear-gradient(135deg, #e8e8ed, #00d68f);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  margin-bottom: 12px;
+  background-clip: text; margin-bottom: 12px;
 }
 .hero p { font-size: 17px; color: var(--text-secondary); max-width: 520px; margin: 0 auto; }
 
+/* Month section */
 .month-section { margin-bottom: 72px; }
 
 .month-header {
   display: flex; align-items: baseline; gap: 16px;
   margin-bottom: 28px; padding-bottom: 16px;
-  border-bottom: 1px solid var(--border); cursor: pointer; user-select: none;
+  border-bottom: 1px solid var(--border);
 }
-
-.toggle-icon { font-size: 16px; color: var(--text-muted); transition: transform 0.3s; flex-shrink: 0; }
-.toggle-icon.expanded { transform: rotate(90deg); }
 
 .month-tag { font-size: 24px; font-weight: 700; color: var(--text-primary); }
 .month-count { font-size: 14px; color: var(--text-muted); }
 
-.month-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s; opacity: 0; }
-.month-content.expanded { max-height: 100000px; opacity: 1; }
+.month-content { }
+.month-content:not(.expanded) { display: none; }
 
-.release-block { margin-bottom: 32px; }
-.release-header {
-  display: flex; align-items: center; gap: 16px; padding: 12px 0;
-  cursor: pointer; user-select: none;
+/* Date group */
+.date-group { margin-bottom: 24px; }
+
+.date-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0; cursor: pointer; user-select: none;
 }
 
-.version-tag { font-size: 20px; font-weight: 700; }
-.version-tag a { color: var(--accent); text-decoration: none; }
-.version-tag a:hover { text-decoration: underline; }
+.toggle-icon { font-size: 14px; color: var(--text-muted); transition: transform 0.3s; flex-shrink: 0; width: 16px; text-align: center; }
+.toggle-icon.expanded { transform: rotate(90deg); }
 
-.release-date { font-size: 13px; color: var(--text-muted); }
-.release-count { font-size: 13px; color: var(--text-secondary); margin-left: auto; }
+.date-label { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+.date-count { font-size: 13px; color: var(--text-muted); margin-left: auto; }
 
-.release-features { padding-left: 8px; }
+.date-releases { padding-left: 8px; }
+.date-releases:not(.expanded) { display: none; }
 
+/* Category group */
+.category-group { margin-bottom: 16px; }
+
+.category-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 0; cursor: pointer; user-select: none;
+}
+
+.category-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.category-label.tag-new { color: var(--tag-new); }
+.category-label.tag-opt { color: var(--tag-opt); }
+.category-label.tag-fix { color: var(--tag-fix); }
+.category-label.tag-break { color: var(--tag-break); }
+
+.category-count { font-size: 12px; color: var(--text-muted); }
+
+.category-features { padding-left: 8px; }
+.category-features:not(.expanded) { display: none; }
+
+/* Feature card */
 .feature-card {
   background: var(--bg-card); border: 1px solid var(--border);
   border-radius: var(--radius-sm); margin-bottom: 6px;
-  transition: all var(--transition); cursor: pointer;
+  transition: all var(--transition);
 }
 .feature-card:hover { background: var(--bg-hover); border-color: var(--border-light); }
 
 .feature-header {
-  display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; cursor: pointer;
 }
 
 .expand-icon { font-size: 11px; color: var(--text-muted); transition: transform 0.2s; flex-shrink: 0; }
@@ -142,20 +190,66 @@ body {
   padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0;
 }
-.tag-new  { color: var(--tag-new);  background: var(--tag-new-bg); }
-.tag-opt  { color: var(--tag-opt);  background: var(--tag-opt-bg); }
-.tag-fix  { color: var(--tag-fix);  background: var(--tag-fix-bg); }
+.tag-new { color: var(--tag-new); background: var(--tag-new-bg); }
+.tag-opt { color: var(--tag-opt); background: var(--tag-opt-bg); }
+.tag-fix { color: var(--tag-fix); background: var(--tag-fix-bg); }
+.tag-break { color: var(--tag-break); background: var(--tag-break-bg); }
 
-.feature-title { font-size: 14px; font-weight: 600; color: var(--text-primary); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.feature-card.open .feature-title { white-space: normal; }
+.feature-title { font-size: 14px; font-weight: 600; color: var(--text-primary); flex-shrink: 0; }
+.feature-summary { font-size: 13px; color: var(--text-secondary); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.feature-card.open .feature-summary { white-space: normal; }
 
 .feature-detail { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
-.feature-card.open .feature-detail { max-height: 2000px; }
+.feature-card.open .feature-detail { max-height: 500px; }
 
 .feature-detail-inner {
   padding: 0 14px 12px 36px; font-size: 13px; color: var(--text-secondary); line-height: 1.7;
 }
 
+/* Compact feature */
+.feature-compact {
+  display: flex; align-items: flex-start; gap: 8px; padding: 6px 10px;
+  border-radius: 4px; cursor: pointer; transition: background var(--transition);
+  flex-wrap: wrap;
+}
+.feature-compact:hover { background: var(--bg-hover); }
+
+.feature-compact-title { font-size: 13px; color: var(--text-primary); flex: 1; min-width: 0; }
+
+.feature-compact-detail {
+  width: 100%; max-height: 0; overflow: hidden; transition: max-height 0.3s;
+  font-size: 12px; color: var(--text-muted); padding-left: 60px; line-height: 1.6;
+}
+.feature-compact.open .feature-compact-detail { max-height: 300px; margin-top: 4px; }
+
+/* Feature single (1-item groups) */
+.feature-single {
+  padding: 8px 10px; border-radius: 4px; margin-bottom: 4px;
+}
+.feature-single-title { font-size: 13px; color: var(--text-primary); margin-left: 8px; }
+.feature-single-detail { display: block; font-size: 12px; color: var(--text-muted); margin-left: 60px; margin-top: 2px; line-height: 1.6; }
+
+/* Component group */
+.component-group { margin-bottom: 12px; }
+
+.component-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; cursor: pointer; user-select: none;
+  border-radius: var(--radius-sm); transition: background var(--transition);
+}
+.component-header:hover { background: var(--bg-hover); }
+
+.component-name { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.component-count { font-size: 12px; color: var(--text-muted); }
+
+.component-summary {
+  padding: 0 10px 6px 36px; font-size: 12px; color: var(--text-muted); line-height: 1.5;
+}
+
+.component-items { padding-left: 16px; }
+.component-items:not(.expanded) { display: none; }
+
+/* Footer */
 .footer {
   text-align: center; padding: 32px; color: var(--text-muted); font-size: 13px;
   border-top: 1px solid var(--border); margin-top: 80px;
@@ -163,9 +257,10 @@ body {
 .footer a { color: var(--accent); text-decoration: none; }
 
 @media (max-width: 640px) {
-  .header-inner { flex-direction: column; gap: 12px; }
+  .header-inner { padding: 12px 16px; }
   .hero h1 { font-size: 28px; }
-  .feature-title { font-size: 13px; }
+  .feature-title { font-size: 12px; }
+  .feature-summary { display: none; }
 }
 </style>
 </head>
@@ -177,1266 +272,255 @@ body {
       <div class="logo-icon">H</div>
       <div class="logo-text">Hermes Agent <span>Changelog</span></div>
     </div>
-    <nav style="display:flex;gap:8px;align-items:center">
-      <a href="index.html" style="padding:5px 12px;border-radius:20px;font-size:13px;font-weight:500;color:#8b8ba0;background:#12121a;border:1px solid #232333;text-decoration:none;transition:all 0.2s;white-space:nowrap" onmouseover="this.style.borderColor='#00d68f';this.style.color='#e8e8ed'" onmouseout="this.style.borderColor='#232333';this.style.color='#8b8ba0'">← 全部项目</a>
-      <a href="openclaw.html" style="padding:5px 12px;border-radius:20px;font-size:13px;font-weight:500;color:#6c5ce7;background:#12121a;border:1px solid #232333;text-decoration:none;transition:all 0.2s;white-space:nowrap" onmouseover="this.style.borderColor='#6c5ce7';this.style.color='#e8e8ed'" onmouseout="this.style.borderColor='#232333';this.style.color='#6c5ce7'">OpenClaw ←</a>
+    <nav class="page-nav">
+      <a href="index.html">← 全部项目</a>
+      <a href="openclaw.html">OpenClaw</a>
     </nav>
-    <nav class="month-nav" id="monthNav"><a class="month-pill active" data-month="0" onclick="switchMonth(0)">2026年05月</a>
-<a class="month-pill" data-month="1" onclick="switchMonth(1)">2026年04月</a>
-<a class="month-pill" data-month="2" onclick="switchMonth(2)">2026年03月</a>
-</nav>
+  </div>
+  <div class="month-nav-wrap">
+    <div class="header-inner" style="padding-top:0">
+      <nav class="month-nav" id="monthNav"></nav>
+    </div>
   </div>
 </header>
 
 <main class="main">
   <div class="hero">
-    <h1>Hermes Agent Changelog</h1>
-    <p>NousResearch/hermes-agent — 追踪每个版本的新功能、优化和修复</p>
+    <h1>What's New</h1>
+    <p>Hermes Agent 的每一次进化，都在这里记录。新功能、优化与重要变更。</p>
   </div>
-  <div id="releases">
-        <section class="month-section" id="m-2026-05" style='display:block'>
-          <div class="month-header" onclick="toggleMonth(this)">
-            <span class="toggle-icon expanded">▶</span>
-            <span class="month-tag">2026年05月</span>
-            <span class="month-count">1 个版本 · 20 项亮点</span>
-          </div>
-          <div class="month-content expanded">
-            <div class="release-block">
-              <div class="release-header" onclick="this.parentElement.classList.toggle('collapsed')">
-                <span class="version-tag"><a href="https://github.com/NousResearch/hermes-agent/releases/tag/v2026.5.7" target="_blank">v2026.5.7</a></span>
-                <span class="release-date">2026-05-07</span>
-                <span class="release-count">20 项亮点</span>
-              </div>
-              <div class="release-features">
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Multi-agent Kanban — delegate to an AI team that actually finishes</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Spin up a durable board, drop tasks on it, and let multiple Hermes workers pick them up, hand off, and close them out. Heartbeats, reclaim, zombie detection, retry budgets, and a hallucination gate keep the team honest. One install, many kanbans. (#17805, #19653, #20232, #20332, #21330, #21183, #21214)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">`/goal` — the agent doesn&#39;t forget what you asked it to do</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Lock the agent onto a target and it stays on task across turns. The Ralph loop as a first-class primitive. (#18262, #18275, #21287)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Show it a video</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">new `video_analyze` tool for native video understanding on Gemini and compatible multimodal models. (@alt-glitch) (#19301)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Clone a voice</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">xAI Custom Voices lands as a TTS provider with voice cloning support. (@alt-glitch) (#18776)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Hermes speaks your language</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">static gateway + CLI messages translate to 7 locales: Chinese, Japanese, German, Spanish, French, Ukrainian, and Turkish. Docs site gains a Chinese (zh-Hans) locale. (#20231, #20329, #20467, #20474, #20430, #20431)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Google Chat — the 20th messaging platform</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">plus a generic platform-plugin hooks surface so third-party adapters drop in without touching core (IRC and Teams migrated). (#21306, #21331)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Sessions survive restarts</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">gateway bounces mid-agent, `/update` restarts, source-file reloads — conversations auto-resume when the gateway comes back. (#21192)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">Security wave — 8 P0 closures</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">redaction ON by default, Discord role-allowlists guild-scoped (CVSS 8.1 cross-guild DM bypass closed), WhatsApp rejects strangers by default, TOCTOU windows closed across `auth.json` and MCP OAuth, browser enforces cloud-metadata SSRF floor, cron prompt-injection scans assembled skill content, `hermes debug share` redacts at upload. (#21193, #21241, #21291, #21176, #21194, #21228, #21350, #19318)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Checkpoints v2</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">state persistence rewritten. Real pruning, disk guardrails, no more orphan shadow repos. (#20709)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">The agent lints its own writes</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">post-write delta lint on `write_file` + `patch`. Python, JSON, YAML, TOML. Syntax errors surface immediately instead of shipping downstream. (#20191)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">`no_agent` cron mode — script-only watchdog</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">cron jobs can now skip the agent entirely and just run a script. Empty stdout is silent, non-empty gets delivered verbatim. (#19709)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">Platform allowlists everywhere</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">`allowed_channels` / `allowed_chats` / `allowed_rooms` config across Slack, Telegram, Mattermost, Matrix, and DingTalk. (#21251)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Providers are now plugins</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">`ProviderProfile` ABC + `plugins/model-providers/`. Drop in third-party providers without touching core. (#20324)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">API server — long-term memory per session</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">`X-Hermes-Session-Key` header gives memory providers a stable session identifier. (#20199)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">MCP levels up</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">SSE transport with OAuth forwarding, stale-pipe retries, image results surface as MEDIA tags instead of getting dropped, keepalive on long-lived lifecycle waits. (#21227, #21323, #21289, #21328, #20209)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Curator grows subcommands</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">`hermes curator archive`, `prune`, `list-archived`. Manual `hermes curator run` is synchronous now — you see results without polling. (#20200, #21236, #21216)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">ACP — `/steer` and `/queue`</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">direct the in-flight agent or queue follow-ups from Zed, VS Code, or JetBrains. Plus atomic session persistence and reasoning-metadata preservation across restarts. (@HenkDz) (#18114, #20279, #20296, #20433)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">TUI glow-up</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">`/model` picker matches `hermes model` with inline auth (@austinpickett), collapsible startup banner sections (@kshitijk4poor), context-compression counter in the status bar. (#18117, #20625, #21218)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">Dashboard grows up</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Plugins page (manage, enable/disable, auth status) (@austinpickett), Profiles management page (@vincez-hms-coder), sortable analytics tables, reverse-proxy support via `X-Forwarded-Prefix`, new `default-large` 18px theme. (#18095, #16419, #18192, #21296, #20820)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">SearXNG + split web tools</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">SearXNG ships as a native search-only backend; web tools now let you pick different backends per capability (search vs extract vs browse). (@kshitijk4poor) (#20823, #20061, #20841)</div></div>
-                </div></div>
-            </div></div>
-        </section>
-        <section class="month-section" id="m-2026-04" >
-          <div class="month-header" onclick="toggleMonth(this)">
-            <span class="toggle-icon expanded">▶</span>
-            <span class="month-tag">2026年04月</span>
-            <span class="month-count">6 个版本 · 67 项亮点</span>
-          </div>
-          <div class="month-content expanded">
-            <div class="release-block">
-              <div class="release-header" onclick="this.parentElement.classList.toggle('collapsed')">
-                <span class="version-tag"><a href="https://github.com/NousResearch/hermes-agent/releases/tag/v2026.4.30" target="_blank">v2026.4.30</a></span>
-                <span class="release-date">2026-04-30</span>
-                <span class="release-count">20 项亮点</span>
-              </div>
-              <div class="release-features">
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Autonomous Curator</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">`hermes curator` runs as a background agent on the gateway&#39;s cron ticker (7-day cycle default). It grades your skill library, consolidates related skills, prunes dead ones, and writes per-run reports to `logs/curator/run.json` + `REPORT.md`. Archived skills are classified consolidated-vs-pruned via model + heuristic. Defense-in-depth gates protect bundled/hub skills from mutation. Unified under `auxiliary.curator` — pick the curator&#39;s model in `hermes model`, manage it from the dashboard. `hermes curator status` ranks skills by usage (most-used / least-used). (#17277, #17307, #17941, #17868, #18033)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Self-improvement loop — substantially upgraded</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">The background review fork (the core of Hermes&#39; self-improvement: after each turn it decides what memories/skills to save or update) is now class-first (rubric-based rather than free-form), active-update biased (prefers the skill the agent just loaded), handles `references/`/`templates/` sub-files, and properly inherits the parent&#39;s live runtime (provider, model, credentials actually propagate). Restricted to memory + skills toolsets so it can&#39;t sprawl. Memory providers shut down cleanly. Prior-turn tool messages excluded from the summary so the fork sees a clean context. (#16026, #17213, #16099, #16569, #16204, #15057)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Skill integrations — major expansion</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">**ComfyUI v5** with official CLI + REST + hardware-gated local install, moved from optional to **built-in by default** (#17610, #17631, #17734). **TouchDesigner-MCP** bundled by default, expanded with GLSL, post-FX, audio, geometry, and 9 new reference docs (#16753, #16624, #16768 — @kshitijk4poor + @SHL0MS). **Humanizer** skill ports a text-cleaner that strips AI-isms (#16787). **claude-design** HTML artifact skill + design-md (Google DESIGN.md spec) + airtable salvage + `skill_manage` edits in `external_dirs` + direct-URL skill install + `/reload-skills` slash command. (#16358, #14876, #16291, #17512, #16323, #17744)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">LM Studio — first-class provider</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">upgraded from a custom-endpoint alias to a full-blown native provider: dedicated auth, `hermes doctor` checks, reasoning transport, live `/models` listing. (Salvage of @kshitijk4poor&#39;s #17061.) (#17102)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">Four more new inference providers</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">**GMI Cloud** (first-class, salvage of #11955 — @isaachuangGMICLOUD), **Azure AI Foundry** with auto-detection, **MiniMax OAuth** with PKCE browser flow (salvage #15203), **Tencent Tokenhub** (salvage of #16860). (#16663, #15845, #17524, #16960)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Pluggable gateway platforms + Microsoft Teams</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">the gateway is now a plugin host. Drop-in messaging adapters live outside the core, and Microsoft Teams is the first plugin-shipped platform. (Salvage of #17664.) (#17751, #17828)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Tencent 元宝 (Yuanbao) — 18th messaging platform</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">native gateway adapter with text + media delivery. (#16298, #17424)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">Spotify — native tools + bundled skill + wizard</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">7 tools (play, search, queue, playlists, devices) behind PKCE OAuth, interactive setup wizard, bundled skill, surfacing in `hermes tools`, cron usage documented. (#15121, #15130, #15154, #15180)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Google Meet plugin</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">join calls, transcribe, speak, follow up. Realtime OpenAI transport + Node bot server, full pipeline bundled as a plugin. (#16364)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">`hermes -z` one-shot mode + `hermes update --check`</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">non-interactive `hermes -z &lt;prompt&gt;` with `--model`/`--provider`/`HERMES_INFERENCE_MODEL`. `hermes update --check` preflight. Opt-in pre-update HERMES_HOME backup. (#15702, #15704, #15841, #16539, #16566)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Models dashboard tab + in-browser model config</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">rich per-model analytics, switch main + auxiliary models from the dashboard. (#17745, #17802)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Remote model catalog manifest</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">OpenRouter + Nous Portal model catalogs are now pulled from a remote manifest so new models show up without a release. (#16033)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Native multimodal image routing</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">images now route based on the model&#39;s actual vision capability rather than provider defaults. (#16506)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Gateway media parity</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">native multi-image sending across Telegram, Discord, Slack, Mattermost, Email, and Signal; centralized audio routing with FLAC support + Telegram document fallback. (#17909, #17833)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">TUI catches up to (and past) the classic CLI</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">LaTeX rendering (@austinpickett), `/reload` .env hot-reload, pluggable busy-indicator styles (@OutThisLife, #13610), opt-in auto-resume of last session, expanded light-terminal auto-detection, session delete from `/resume` picker with `d`, modified mouse-wheel line scroll, and a `/mouse` toggle that kills ConPTY&#39;s phantom mouse injection (@kevin-ho). (#17175, #17286, #17150, #17130, #17113, #17668, #17669, #15488)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Observability + achievements plugins</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">bundled Langfuse observability plugin (salvage #16845) + bundled hermes-achievements plugin that scans full session history. (#16917, #17754)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">TTS provider registry + Piper local TTS</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">pluggable `tts.providers.&lt;name&gt;` registry; Piper ships as a native local TTS provider. (Closes #8508.) (#17843, #17885)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Vercel Sandbox backend</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Vercel sandboxes as an execute_code/terminal backend (@kshitijk4poor). (#17445)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">Secret redaction off by default</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">default flipped to off. Prevents the long-standing patch-corruption incidents where fake secret-shaped substrings mangled tool outputs. Opt in via `redaction.enabled: true` when you need it. (#16794)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Cold-start performance</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">visible TUI cold start cut **~57%** via lazy agent init (@OutThisLife), lazy imports of OpenAI / Anthropic / Firecrawl / account_usage, mtime-cached `load_config()`, memoized `get_tool_definitions()` with TTL-cached `check_fn` results, precompiled dangerous-command patterns. (#17190, #17046, #17041, #17098, #17206)</div></div>
-                </div></div>
-            </div>
-            <div class="release-block">
-              <div class="release-header" onclick="this.parentElement.classList.toggle('collapsed')">
-                <span class="version-tag"><a href="https://github.com/NousResearch/hermes-agent/releases/tag/v2026.4.23" target="_blank">v2026.4.23</a></span>
-                <span class="release-date">2026-04-23</span>
-                <span class="release-count">13 项亮点</span>
-              </div>
-              <div class="release-features">
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">New Ink-based TUI</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">`hermes --tui` is now a full React/Ink rewrite of the interactive CLI, with a Python JSON-RPC backend (`tui_gateway`). Sticky composer, live streaming with OSC-52 clipboard support, stable picker keys, status bar with per-turn stopwatch and git branch, `/clear` confirm, light-theme preset, and a subagent spawn observability overlay. ~310 commits to `ui-tui/` + `tui_gateway/`. (@OutThisLife + Teknium)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Transport ABC + Native AWS Bedrock</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Format conversion and HTTP transport were extracted from `run_agent.py` into a pluggable `agent/transports/` layer. `AnthropicTransport`, `ChatCompletionsTransport`, `ResponsesApiTransport`, and `BedrockTransport` each own their own format conversion and API shape. Native AWS Bedrock support via the Converse API ships on top of the new abstraction. (#10549, #13347, #13366, #13430, #13805, #13814 — @kshitijk4poor + Teknium)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">Five new inference paths</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Native NVIDIA NIM (#11774), Arcee AI (#9276), Step Plan (#13893), Google Gemini CLI OAuth (#11270), and Vercel ai-gateway with pricing + dynamic discovery (#13223 — @jerilynzheng). Plus Gemini routed through the native AI Studio API for better performance (#12674).</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">GPT-5.5 over Codex OAuth</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">OpenAI&#39;s new GPT-5.5 reasoning model is now available through your ChatGPT Codex OAuth, with live model discovery wired into the model picker so new OpenAI releases show up without catalog updates. (#14720)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">QQBot — 17th supported platform</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Native QQBot adapter via QQ Official API v2, with QR scan-to-configure setup wizard, streaming cursor, emoji reactions, and DM/group policy gating that matches WeCom/Weixin parity. (#9364, #11831)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Plugin surface expanded</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Plugins can now register slash commands (`register_command`), dispatch tools directly (`dispatch_tool`), block tool execution from hooks (`pre_tool_call` can veto), rewrite tool results (`transform_tool_result`), transform terminal output (`transform_terminal_output`), ship image_gen backends, and add custom dashboard tabs. The bundled disk-cleanup plugin is opt-in by default as a reference implementation. (#9377, #10626, #10763, #10951, #12929, #12944, #12972, #13799, #14175)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">`/steer` — mid-run agent nudges</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">`/steer &lt;prompt&gt;` injects a note that the running agent sees after its next tool call, without interrupting the turn or breaking prompt cache. For when you want to course-correct an agent in-flight. (#12116)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Shell hooks</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Wire any shell script as a Hermes lifecycle hook (pre_tool_call, post_tool_call, on_session_start, etc.) without writing a Python plugin. (#13296)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Webhook direct-delivery mode</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Webhook subscriptions can now forward payloads straight to a platform chat without going through the agent — zero-LLM push notifications for alerting, uptime checks, and event streams. (#12473)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Smarter delegation</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Subagents now have an explicit `orchestrator` role that can spawn their own workers, with configurable `max_spawn_depth` (default flat). Concurrent sibling subagents share filesystem state through a file-coordination layer so they don&#39;t clobber each other&#39;s edits. (#13691, #13718)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Auxiliary models — configurable UI + main-model-first</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">`hermes model` has a dedicated &quot;Configure auxiliary models&quot; screen for per-task overrides (compression, vision, session_search, title_generation). `auto` routing now defaults to the main model for side tasks across all users (previously aggregator users were silently routed to a cheap provider-side default). (#11891, #11900)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Dashboard plugin system + live theme switching</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">The web dashboard is now extensible. Third-party plugins can add custom tabs, widgets, and views without forking. Paired with a live-switching theme system — themes now control colors, fonts, layout, and density — so users can hot-swap the dashboard look without a reload. Same theming discipline the CLI has, now on the web. (#10951, #10687, #14725)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Dashboard polish</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">i18n (English + Chinese), react-router sidebar layout, mobile-responsive, Vercel deployment, real per-session API call tracking, and one-click update + gateway restart buttons. (#9228, #9370, #9453, #10686, #13526, #14004 — @austinpickett + @DeployFaith + Teknium) ---</div></div>
-                </div></div>
-            </div>
-            <div class="release-block">
-              <div class="release-header" onclick="this.parentElement.classList.toggle('collapsed')">
-                <span class="version-tag"><a href="https://github.com/NousResearch/hermes-agent/releases/tag/v2026.4.16" target="_blank">v2026.4.16</a></span>
-                <span class="release-date">2026-04-16</span>
-                <span class="release-count">1 项亮点</span>
-              </div>
-              <div class="release-features">
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Nous Tool Gateway</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Paid Nous Portal subscribers now get automatic access to **web search** (Firecrawl), **image generation** (FAL / FLUX 2 Pro), **text-to-speech** (OpenAI TTS), and **browser automation** (Browser Use) through their existing subscription. No separate API keys needed — just run `hermes model`, select Nous Portal, and pick which tools to enable. Per-tool opt-in via `use_gateway` config, full integration with `hermes tools` and `hermes status`, and the runtime correctly prefers the gateway even when direct API keys exist. Replaces the old hidden `HERMES_ENABLE_NOUS_MANAGED_TOOLS` env var with clean subscription-based detection. (#11206, based on work by @jquesnelle; docs: #11208) ---</div></div>
-                </div></div>
-            </div>
-            <div class="release-block">
-              <div class="release-header" onclick="this.parentElement.classList.toggle('collapsed')">
-                <span class="version-tag"><a href="https://github.com/NousResearch/hermes-agent/releases/tag/v2026.4.13" target="_blank">v2026.4.13</a></span>
-                <span class="release-date">2026-04-13</span>
-                <span class="release-count">13 项亮点</span>
-              </div>
-              <div class="release-features">
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Local Web Dashboard</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">A new browser-based dashboard for managing your Hermes Agent locally. Configure settings, monitor sessions, browse skills, and manage your gateway — all from a clean web interface without touching config files or the terminal. The easiest way to get started with Hermes.</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Fast Mode (`/fast`)</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Priority processing for OpenAI and Anthropic models. Toggle `/fast` to route through priority queues for significantly lower latency on supported models (GPT-5.4, Codex, Claude). Expands across all OpenAI Priority Processing models and Anthropic&#39;s fast tier. (#6875, #6960, #7037)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">iMessage via BlueBubbles</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Full iMessage integration through BlueBubbles, bringing Hermes to Apple&#39;s messaging ecosystem. Auto-webhook registration, setup wizard integration, and crash resilience. (#6437, #6460, #6494)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">WeChat (Weixin) &amp; WeCom Callback Mode</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Native WeChat support via iLink Bot API and a new WeCom callback-mode adapter for self-built enterprise apps. Streaming cursor, media uploads, markdown link handling, and atomic state persistence. Hermes now covers the Chinese messaging ecosystem end-to-end. (#7166, #7943)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Termux / Android Support</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Run Hermes natively on Android via Termux. Adapted install paths, TUI optimizations for mobile screens, voice backend support, and the `/image` command work on-device. (#6834)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Background Process Monitoring (`watch_patterns`)</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Set patterns to watch for in background process output and get notified in real-time when they match. Monitor for errors, wait for specific events (&quot;listening on port&quot;), or watch build logs — all without polling. (#7635)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">Native xAI &amp; Xiaomi MiMo Providers</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">First-class provider support for xAI (Grok) and Xiaomi MiMo, with direct API access, model catalogs, and setup wizard integration. Plus Qwen OAuth with portal request support. (#7372, #7855)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Pluggable Context Engine</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Context management is now a pluggable slot via `hermes plugins`. Swap in custom context engines that control what the agent sees each turn — filtering, summarization, or domain-specific context injection. (#7464)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Unified Proxy Support</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">SOCKS proxy, `DISCORD_PROXY`, and system proxy auto-detection across all gateway platforms. Hermes behind corporate firewalls just works. (#6814)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">Comprehensive Security Hardening</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Path traversal protection in checkpoint manager, shell injection neutralization in sandbox writes, SSRF redirect guards in Slack image uploads, Twilio webhook signature validation (SMS RCE fix), API server auth enforcement, git argument injection prevention, and approval button authorization. (#7933, #7944, #7940, #7151, #7156)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">`hermes backup` &amp; `hermes import`</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Full backup and restore of your Hermes configuration, sessions, skills, and memory. Migrate between machines or create snapshots before major changes. (#7997)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">16 Supported Platforms</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">With BlueBubbles (iMessage) and WeChat joining Telegram, Discord, Slack, WhatsApp, Signal, Matrix, Email, SMS, DingTalk, Feishu, WeCom, Mattermost, Home Assistant, and Webhooks, Hermes now runs on 16 messaging platforms out of the box.</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">`/debug` &amp; `hermes debug share`</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">New debugging toolkit: `/debug` slash command across all platforms for quick diagnostics, plus `hermes debug share` to upload a full debug report to a pastebin for easy sharing when troubleshooting. (#8681) ---</div></div>
-                </div></div>
-            </div>
-            <div class="release-block">
-              <div class="release-header" onclick="this.parentElement.classList.toggle('collapsed')">
-                <span class="version-tag"><a href="https://github.com/NousResearch/hermes-agent/releases/tag/v2026.4.8" target="_blank">v2026.4.8</a></span>
-                <span class="release-date">2026-04-08</span>
-                <span class="release-count">12 项亮点</span>
-              </div>
-              <div class="release-features">
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Background Process Auto-Notifications (`notify_on_complete`)</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Background tasks can now automatically notify the agent when they finish. Start a long-running process (AI model training, test suites, deployments, builds) and the agent gets notified on completion — no polling needed. The agent can keep working on other things and pick up results when they land. (#5779)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Free Xiaomi MiMo v2 Pro on Nous Portal</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Nous Portal now supports the free-tier Xiaomi MiMo v2 Pro model for auxiliary tasks (compression, vision, summarization), with free-tier model gating and pricing display in model selection. (#6018, #5880)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Live Model Switching (`/model` Command)</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Switch models and providers mid-session from CLI, Telegram, Discord, Slack, or any gateway platform. Aggregator-aware resolution keeps you on OpenRouter/Nous when possible, with automatic cross-provider fallback when needed. Interactive model pickers on Telegram and Discord with inline buttons. (#5181, #5742)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Self-Optimized GPT/Codex Tool-Use Guidance</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">The agent diagnosed and patched 5 failure modes in GPT and Codex tool calling through automated behavioral benchmarking, dramatically improving reliability on OpenAI models. Includes execution discipline guidance and thinking-only prefill continuation for structured reasoning. (#6120, #5414, #5931)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Google AI Studio (Gemini) Native Provider</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Direct access to Gemini models through Google&#39;s AI Studio API. Includes automatic models.dev registry integration for real-time context length detection across any provider. (#5577)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Inactivity-Based Agent Timeouts</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Gateway and cron timeouts now track actual tool activity instead of wall-clock time. Long-running tasks that are actively working will never be killed — only truly idle agents time out. (#5389, #5440)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Approval Buttons on Slack &amp; Telegram</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Dangerous command approval via native platform buttons instead of typing `/approve`. Slack gets thread context preservation; Telegram gets emoji reactions for approval status. (#5890, #5975)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">MCP OAuth 2.1 PKCE + OSV Malware Scanning</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Full standards-compliant OAuth for MCP server authentication, plus automatic malware scanning of MCP extension packages via the OSV vulnerability database. (#5420, #5305)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Centralized Logging &amp; Config Validation</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Structured logging to `~/.hermes/logs/` (agent.log + errors.log) with the `hermes logs` command for tailing and filtering. Config structure validation catches malformed YAML at startup before it causes cryptic failures. (#5430, #5426)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Plugin System Expansion</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Plugins can now register CLI subcommands, receive request-scoped API hooks with correlation IDs, prompt for required env vars during install, and hook into session lifecycle events (finalize/reset). (#5295, #5427, #5470, #6129)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Matrix Tier 1 &amp; Platform Hardening</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Matrix gets reactions, read receipts, rich formatting, and room management. Discord adds channel controls and ignored channels. Signal gets full MEDIA: tag delivery. Mattermost gets file attachments. Comprehensive reliability fixes across all platforms. (#5275, #5975, #5602)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">Security Hardening Pass</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Consolidated SSRF protections, timing attack mitigations, tar traversal prevention, credential leakage guards, cron path traversal hardening, and cross-session isolation. Terminal workdir sanitization across all backends. (#5944, #5613, #5629) ---</div></div>
-                </div></div>
-            </div>
-            <div class="release-block">
-              <div class="release-header" onclick="this.parentElement.classList.toggle('collapsed')">
-                <span class="version-tag"><a href="https://github.com/NousResearch/hermes-agent/releases/tag/v2026.4.3" target="_blank">v2026.4.3</a></span>
-                <span class="release-date">2026-04-03</span>
-                <span class="release-count">8 项亮点</span>
-              </div>
-              <div class="release-features">
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Pluggable Memory Provider Interface</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Memory is now an extensible plugin system. Third-party memory backends (Honcho, vector stores, custom DBs) implement a simple provider ABC and register via the plugin system. Built-in memory is the default provider. Honcho integration restored to full parity as the reference plugin with profile-scoped host/peer resolution. (#4623, #4616, #4355)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Same-Provider Credential Pools</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Configure multiple API keys for the same provider with automatic rotation. Thread-safe `least_used` strategy distributes load across keys, and 401 failures trigger automatic rotation to the next credential. Set up via the setup wizard or `credential_pool` config. (#4188, #4300, #4361)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">Camofox Anti-Detection Browser Backend</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">New local browser backend using Camoufox for stealth browsing. Persistent sessions with VNC URL discovery for visual debugging, configurable SSRF bypass for local backends, auto-install via `hermes tools`. (#4008, #4419, #4292)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Inline Diff Previews</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">File write and patch operations now show inline diffs in the tool activity feed, giving you visual confirmation of what changed before the agent moves on. (#4411, #4423)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">API Server Session Continuity &amp; Tool Streaming</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">The API server (Open WebUI integration) now streams tool progress events in real-time and supports `X-Hermes-Session-Id` headers for persistent sessions across requests. Sessions persist to the shared SessionDB. (#4092, #4478, #4802)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">ACP: Client-Provided MCP Servers</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Editor integrations (VS Code, Zed, JetBrains) can now register their own MCP servers, which Hermes picks up as additional agent tools. Your editor&#39;s MCP ecosystem flows directly into the agent. (#4705)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Gateway Hardening</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Major stability pass across race conditions, photo media delivery, flood control, stuck sessions, approval routing, and compression death spirals. The gateway is substantially more reliable in production. (#4727, #4750, #4798, #4557)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">Security: Secret Exfiltration Blocking</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Browser URLs and LLM responses are now scanned for secret patterns, blocking exfiltration attempts via URL encoding, base64, or prompt injection. Credential directory protections expanded to `.docker`, `.azure`, `.config/gh`. Execute_code sandbox output is redacted. (#4483, #4360, #4305, #4327) ---</div></div>
-                </div></div>
-            </div></div>
-        </section>
-        <section class="month-section" id="m-2026-03" >
-          <div class="month-header" onclick="toggleMonth(this)">
-            <span class="toggle-icon expanded">▶</span>
-            <span class="month-tag">2026年03月</span>
-            <span class="month-count">5 个版本 · 50 项亮点</span>
-          </div>
-          <div class="month-content expanded">
-            <div class="release-block">
-              <div class="release-header" onclick="this.parentElement.classList.toggle('collapsed')">
-                <span class="version-tag"><a href="https://github.com/NousResearch/hermes-agent/releases/tag/v2026.3.30" target="_blank">v2026.3.30</a></span>
-                <span class="release-date">2026-03-30</span>
-                <span class="release-count">10 项亮点</span>
-              </div>
-              <div class="release-features">
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Profiles — Multi-Instance Hermes</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Run multiple isolated Hermes instances from the same installation. Each profile gets its own config, memory, sessions, skills, and gateway service. Create with `hermes profile create`, switch with `hermes -p &lt;name&gt;`, export/import for sharing. Full token-lock isolation prevents two profiles from using the same bot credential. (#3681)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">MCP Server Mode</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Expose Hermes conversations and sessions to any MCP-compatible client (Claude Desktop, Cursor, VS Code, etc.) via `hermes mcp serve`. Browse conversations, read messages, search across sessions, and manage attachments — all through the Model Context Protocol. Supports both stdio and Streamable HTTP transports. (#3795)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Docker Container</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Official Dockerfile for running Hermes Agent in a container. Supports both CLI and gateway modes with volume-mounted config. (#3668, closes #850)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Ordered Fallback Provider Chain</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Configure multiple inference providers with automatic failover. When your primary provider returns errors or is unreachable, Hermes automatically tries the next provider in the chain. Configure via `fallback_providers` in config.yaml. (#3813, closes #1734)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Feishu/Lark Platform Support</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Full gateway adapter for Feishu (飞书) and Lark with event subscriptions, message cards, group chat, image/file attachments, and interactive card callbacks. (#3799, #3817, closes #1788)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">WeCom (Enterprise WeChat) Platform Support</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">New gateway adapter for WeCom (企业微信) with text/image/voice messages, group chats, and callback verification. (#3847)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">Slack Multi-Workspace OAuth</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Connect a single Hermes gateway to multiple Slack workspaces via OAuth token file. Each workspace gets its own bot token, resolved dynamically per incoming event. (#3903)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Telegram Webhook Mode &amp; Group Controls</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Run the Telegram adapter in webhook mode as an alternative to polling — faster response times and better for production deployments behind a reverse proxy. New group mention gating controls when the bot responds: always, only when @mentioned, or via regex triggers. (#3880, #3870)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Exa Search Backend</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Add Exa as an alternative web search and content extraction backend alongside Firecrawl and DuckDuckGo. Set `EXA_API_KEY` and configure as preferred backend. (#3648)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Skills &amp; Credentials on Remote Backends</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Mount skill directories and credential files into Modal and Docker containers, so remote terminal sessions have access to the same skills and secrets as local execution. (#3890, #3671, closes #3665, #3433) ---</div></div>
-                </div></div>
-            </div>
-            <div class="release-block">
-              <div class="release-header" onclick="this.parentElement.classList.toggle('collapsed')">
-                <span class="version-tag"><a href="https://github.com/NousResearch/hermes-agent/releases/tag/v2026.3.28" target="_blank">v2026.3.28</a></span>
-                <span class="release-date">2026-03-28</span>
-                <span class="release-count">9 项亮点</span>
-              </div>
-              <div class="release-features">
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Nous Portal now supports 400+ models</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">The Nous Research inference portal has expanded dramatically, giving Hermes Agent users access to over 400 models through a single provider endpoint</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Hugging Face as a first-class inference provider</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Full integration with HF Inference API including curated agentic model picker that maps to OpenRouter analogues, live `/models` endpoint probe, and setup wizard flow (#3419, #3440)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Telegram Private Chat Topics</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Project-based conversations with functional skill binding per topic, enabling isolated workflows within a single Telegram chat (#3163)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Native Modal SDK backend</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Replaced swe-rex dependency with native Modal SDK (`Sandbox.create.aio` + `exec.aio`), eliminating tunnels and simplifying the Modal terminal backend (#3538)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Plugin lifecycle hooks activated</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">`pre_llm_call`, `post_llm_call`, `on_session_start`, and `on_session_end` hooks now fire in the agent loop and CLI/gateway, completing the plugin hook system (#3542)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Improved OpenAI Model Reliability</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Added `GPT_TOOL_USE_GUIDANCE` to prevent GPT models from describing intended actions instead of making tool calls, plus automatic stripping of stale budget warnings from conversation history that caused models to avoid tools across turns (#3528)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Nix flake</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Full uv2nix build, NixOS module with persistent container mode, auto-generated config keys from Python source, and suffix PATHs for agent-friendliness (#20, #3274, #3061) by @alt-glitch</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Supply chain hardening</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Removed compromised `litellm` dependency, pinned all dependency version ranges, regenerated `uv.lock` with hashes, added CI workflow scanning PRs for supply chain attack patterns, and bumped deps to fix CVEs (#2796, #2810, #2812, #2816, #3073)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Anthropic output limits fix</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Replaced hardcoded 16K `max_tokens` with per-model native output limits (128K for Opus 4.6, 64K for Sonnet 4.6), fixing &quot;Response truncated&quot; and thinking-budget exhaustion on direct Anthropic API (#3426, #3444) ---</div></div>
-                </div></div>
-            </div>
-            <div class="release-block">
-              <div class="release-header" onclick="this.parentElement.classList.toggle('collapsed')">
-                <span class="version-tag"><a href="https://github.com/NousResearch/hermes-agent/releases/tag/v2026.3.23" target="_blank">v2026.3.23</a></span>
-                <span class="release-date">2026-03-24</span>
-                <span class="release-count">8 项亮点</span>
-              </div>
-              <div class="release-features">
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">OpenAI-compatible API server</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Expose Hermes as an `/v1/chat/completions` endpoint with a new `/api/jobs` REST API for cron job management, hardened with input limits, field whitelists, SQLite-backed response persistence, and CORS origin protection (#1756, #2450, #2456, #2451, #2472)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">6 new messaging platform adapters</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Signal, DingTalk, SMS (Twilio), Mattermost, Matrix, and Webhook adapters join Telegram, Discord, and WhatsApp. Gateway auto-reconnects failed platforms with exponential backoff (#2206, #1685, #1688, #1683, #2166, #2584)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">@ context references</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Claude Code-style `@file` and `@url` context injection with tab completions in the CLI (#2343, #2482)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">4 new inference providers</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">GitHub Copilot (OAuth + token validation), Alibaba Cloud / DashScope, Kilo Code, and OpenCode Zen/Go (#1924, #1879 by @mchzimm, #1673, #1666, #1650)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">MCP server management CLI</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">`hermes mcp` commands for installing, configuring, and authenticating MCP servers with full OAuth 2.1 PKCE flow (#2465)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Gateway prompt caching</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Cache AIAgent instances per session, preserving Anthropic prompt cache across turns for dramatic cost reduction on long conversations (#2282, #2284, #2361)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Context compression overhaul</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Structured summaries with iterative updates, token-budget tail protection, configurable summary endpoint, and fallback model support (#2323, #1727, #2224)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">Streaming enabled by default</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">CLI streaming on by default with proper spinner/tool progress display during streaming mode, plus extensive linebreak and concatenation fixes (#2340, #2161, #2258) ---</div></div>
-                </div></div>
-            </div>
-            <div class="release-block">
-              <div class="release-header" onclick="this.parentElement.classList.toggle('collapsed')">
-                <span class="version-tag"><a href="https://github.com/NousResearch/hermes-agent/releases/tag/v2026.3.17" target="_blank">v2026.3.17</a></span>
-                <span class="release-date">2026-03-17</span>
-                <span class="release-count">14 项亮点</span>
-              </div>
-              <div class="release-features">
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Unified Streaming Infrastructure</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Real-time token-by-token delivery in CLI and all gateway platforms. Responses stream as they&#39;re generated instead of arriving as a block. (#1538)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">First-Class Plugin Architecture</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Drop Python files into `~/.hermes/plugins/` to extend Hermes with custom tools, commands, and hooks. No forking required. (#1544, #1555)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">Native Anthropic Provider</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Direct Anthropic API calls with Claude Code credential auto-discovery, OAuth PKCE flows, and native prompt caching. No OpenRouter middleman needed. (#1097)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Smart Approvals + /stop Command</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Codex-inspired approval system that learns which commands are safe and remembers your preferences. `/stop` kills the current agent run immediately. (#1543)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Honcho Memory Integration</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Async memory writes, configurable recall modes, session title integration, and multi-user isolation in gateway mode. By @erosika. (#736)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Voice Mode</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Push-to-talk in CLI, voice notes in Telegram/Discord, Discord voice channel support, and local Whisper transcription via faster-whisper. (#1299, #1185, #1429)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Concurrent Tool Execution</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Multiple independent tool calls now run in parallel via ThreadPoolExecutor, significantly reducing latency for multi-tool turns. (#1152)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">安全</span>
-                    <span class="feature-title">PII Redaction</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">When `privacy.redact_pii` is enabled, personally identifiable information is automatically scrubbed before sending context to LLM providers. (#1542)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-fix">修复</span>
-                    <span class="feature-title">`/browser connect` via CDP</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Attach browser tools to a live Chrome instance through Chrome DevTools Protocol. Debug, inspect, and interact with pages you already have open. (#1549)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Vercel AI Gateway Provider</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Route Hermes through Vercel&#39;s AI Gateway for access to their model catalog and infrastructure. (#1628)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Centralized Provider Router</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Rebuilt provider system with `call_llm` API, unified `/model` command, auto-detect provider on model switch, and direct endpoint overrides for auxiliary/delegation clients. (#1003, #1506, #1375)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">ACP Server (IDE Integration)</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">VS Code, Zed, and JetBrains can now connect to Hermes as an agent backend, with full slash command support. (#1254, #1532)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Persistent Shell Mode</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Local and SSH terminal backends can maintain shell state across tool calls — cd, env vars, and aliases persist. By @alt-glitch. (#1067, #1483)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">Agentic On-Policy Distillation (OPD)</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">New RL training environment for distilling agent policies, expanding the Atropos training ecosystem. (#1149) ---</div></div>
-                </div></div>
-            </div>
-            <div class="release-block">
-              <div class="release-header" onclick="this.parentElement.classList.toggle('collapsed')">
-                <span class="version-tag"><a href="https://github.com/NousResearch/hermes-agent/releases/tag/v2026.3.12" target="_blank">v2026.3.12</a></span>
-                <span class="release-date">2026-03-12</span>
-                <span class="release-count">9 项亮点</span>
-              </div>
-              <div class="release-features">
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Multi-Platform Messaging Gateway</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Telegram, Discord, Slack, WhatsApp, Signal, Email (IMAP/SMTP), and Home Assistant platforms with unified session management, media attachments, and per-platform tool configuration.</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-new">新功能</span>
-                    <span class="feature-title">MCP (Model Context Protocol) Client</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Native MCP support with stdio and HTTP transports, reconnection, resource/prompt discovery, and sampling (server-initiated LLM requests). (#291 — @0xbyt4, #301, #753)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Skills Ecosystem</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">70+ bundled and optional skills across 15+ categories with a Skills Hub for community discovery, per-platform enable/disable, conditional activation based on tool availability, and prerequisite validation. (#743 — @teyrebaz33, #785 — @teyrebaz33)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Centralized Provider Router</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Unified `call_llm()`/`async_call_llm()` API replaces scattered provider logic across vision, summarization, compression, and trajectory saving. All auxiliary consumers route through a single code path with automatic credential resolution. (#1003)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">ACP Server</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">VS Code, Zed, and JetBrains editor integration via the Agent Communication Protocol standard. (#949)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">CLI Skin/Theme Engine</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Data-driven visual customization: banners, spinners, colors, branding. 7 built-in skins + custom YAML skins.</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Git Worktree Isolation</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">`hermes -w` launches isolated agent sessions in git worktrees for safe parallel work on the same repo. (#654)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">Filesystem Checkpoints &amp; Rollback</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">Automatic snapshots before destructive operations with `/rollback` to restore. (#824)</div></div>
-                </div>
-                <div class="feature-card" onclick="this.classList.toggle('open')">
-                  <div class="feature-header">
-                    <span class="expand-icon">▶</span>
-                    <span class="feature-tag tag-opt">优化</span>
-                    <span class="feature-title">3,289 Tests</span>
-                  </div>
-                  <div class="feature-detail"><div class="feature-detail-inner">From near-zero test coverage to a comprehensive test suite covering agent, gateway, tools, cron, and CLI. ---</div></div>
-                </div></div>
-            </div></div>
-        </section></div>
+  <div id="changelog"></div>
 </main>
 
 <footer class="footer">
   <p>数据来源：<a href="https://github.com/NousResearch/hermes-agent/releases" target="_blank">GitHub Releases</a> · 自动构建于 <span id="buildDate"></span></p>
 </footer>
 
+<script src="hermes_data.js"></script>
 <script>
-document.getElementById('buildDate').textContent = new Date().toLocaleDateString('zh-CN');
+(function() {
+  const TAG_MAP = {
+    '新功能':  { cls: 'tag-new',   label: '新功能' },
+    '优化':    { cls: 'tag-opt',   label: '优化' },
+    '修复':    { cls: 'tag-fix',   label: '修复' },
+    '安全':    { cls: 'tag-fix',   label: '安全' },
+    'Breaking':{ cls: 'tag-break', label: 'BREAKING' }
+  };
+  const CAT_ORDER = ['Breaking', '新功能', '安全', '修复', '优化'];
 
-function switchMonth(idx) {
-  document.querySelectorAll('.month-pill').forEach((p, i) => p.classList.toggle('active', i === idx));
-  document.querySelectorAll('.month-section').forEach((s, i) => {
-    s.style.display = (i === idx) ? 'block' : 'none';
-  });
-}
+  // Adapt RELEASES_DATA (from hermes_data.js) to CHANGELOG_DATA format
+  const CHANGELOG_DATA = (RELEASES_DATA || []).map(m => ({
+    month: m.label,
+    monthId: m.id,
+    releases: m.releases.map(r => ({
+      version: r.version,
+      date: r.date,
+      features: r.features.map(f => ({
+        title: f.title,
+        tag: f.tag,
+        summary: f.summary,
+        detail: f.detail,
+        summaryZh: f.summaryZh || f.summary
+      }))
+    }))
+  }));
 
-function toggleMonth(header) {
-  const icon = header.querySelector('.toggle-icon');
-  const content = header.nextElementSibling;
-  icon.classList.toggle('expanded');
-  content.classList.toggle('expanded');
-}
+  let currentMonthIdx = 0;
 
-// Init: show first month only
-document.querySelectorAll('.month-section').forEach((s, i) => {
-  s.style.display = (i === 0) ? 'block' : 'none';
-});
+  function esc(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  document.getElementById('buildDate').textContent = new Date().toLocaleDateString('zh-CN');
+
+  function renderNav() {
+    const nav = document.getElementById('monthNav');
+    nav.innerHTML = CHANGELOG_DATA.map((m, i) =>
+      `<a class="month-pill${i === currentMonthIdx ? ' active' : ''}" onclick="switchMonth(${i})">${m.month}</a>`
+    ).join('');
+  }
+
+  window.switchMonth = function(idx) {
+    currentMonthIdx = idx;
+    renderNav();
+    renderMonth();
+  };
+
+  function renderFeatureCard(f) {
+    const tag = TAG_MAP[f.tag] || TAG_MAP['新功能'];
+    return `
+      <div class="feature-card" onclick="toggleCard(this)">
+        <div class="feature-header">
+          <span class="expand-icon">▶</span>
+          <span class="feature-tag ${tag.cls}">${tag.label}</span>
+          <span class="feature-title">${esc(f.title)}</span>
+          <span class="feature-summary">${esc(f.summaryZh || f.summary)}</span>
+        </div>
+        <div class="feature-detail">
+          <div class="feature-detail-inner">${esc(f.detail)}</div>
+        </div>
+      </div>`;
+  }
+
+  function extractComponent(title) {
+    const colonM = title.match(/^([A-Za-z][\w/.-]*(?:\s+[A-Za-z][\w/.-]*)*)\s*[:：]\s/);
+    if (colonM) {
+      const prefix = colonM[1].trim();
+      if (prefix.includes('/') || prefix.split(/\s+/).length <= 3) return prefix;
+    }
+    const wordM = title.match(/^([A-Z][a-zA-Z0-9]+(?:\/[A-Z][a-zA-Z0-9]+)*)/);
+    return wordM ? wordM[1] : null;
+  }
+
+  function renderFeatureGroups(feats, dIdx) {
+    const groups = new Map();
+    for (const f of feats) {
+      const comp = extractComponent(f.title) || 'Other';
+      if (!groups.has(comp)) groups.set(comp, []);
+      groups.get(comp).push(f);
+    }
+
+    if (groups.size <= 1 && feats.length <= 3) {
+      return feats.map(f => {
+        const tag = TAG_MAP[f.tag] || TAG_MAP['新功能'];
+        const displayText = f.summaryZh || f.summary || f.title;
+        return `<div class="feature-compact" onclick="this.classList.toggle('open')">
+          <span class="feature-tag ${tag.cls}" style="font-size:10px">${tag.label}</span>
+          <span class="feature-compact-title">${esc(displayText)}</span>
+          <div class="feature-compact-detail">${esc(f.detail)}</div>
+        </div>`;
+      }).join('');
+    }
+
+    const expanded = dIdx === 0;
+    return Array.from(groups.entries()).map(([comp, items]) => {
+      const itemsHtml = items.map(f => {
+        const tag = TAG_MAP[f.tag] || TAG_MAP['新功能'];
+        const displayText = f.summaryZh || f.summary || f.title;
+        return `<div class="feature-compact" onclick="this.classList.toggle('open')">
+          <span class="feature-tag ${tag.cls}" style="font-size:10px">${tag.label}</span>
+          <span class="feature-compact-title">${esc(displayText)}</span>
+          <div class="feature-compact-detail">${esc(f.detail)}</div>
+        </div>`;
+      }).join('');
+
+      if (items.length === 1) {
+        const tag = TAG_MAP[items[0].tag] || TAG_MAP['新功能'];
+        const displayText = items[0].summaryZh || items[0].summary || items[0].title;
+        return `<div class="feature-single">
+          <span class="feature-tag ${tag.cls}" style="font-size:10px">${tag.label}</span>
+          <span class="feature-single-title">${esc(displayText)}</span>
+          <span class="feature-single-detail">${esc(items[0].detail)}</span>
+        </div>`;
+      }
+
+      const summaryText = items.slice(0, 3).map(f => f.summaryZh || f.summary || (f.detail || '').split(/[.。]/)[0]).join('；');
+
+      return `<div class="component-group">
+        <div class="component-header" onclick="toggleComponent(this)">
+          <span class="toggle-icon${expanded ? ' expanded' : ''}">▶</span>
+          <span class="component-name">${esc(comp)}</span>
+          <span class="component-count">${items.length} 项</span>
+        </div>
+        <div class="component-summary">${esc(summaryText)}</div>
+        <div class="component-items${expanded ? ' expanded' : ''}">
+          ${itemsHtml}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderMonth() {
+    const container = document.getElementById('changelog');
+    const month = CHANGELOG_DATA[currentMonthIdx];
+    if (!month) { container.innerHTML = ''; return; }
+
+    const releaseCount = month.releases.reduce((s, r) => s + r.features.length, 0);
+
+    const dateMap = new Map();
+    for (const r of month.releases) {
+      if (!dateMap.has(r.date)) dateMap.set(r.date, []);
+      dateMap.get(r.date).push(r);
+    }
+    const dates = Array.from(dateMap.keys()).sort((a, b) => b.localeCompare(a));
+
+    const datesHtml = dates.map((date, dIdx) => {
+      const releases = dateMap.get(date);
+      const totalFeatures = releases.reduce((s, r) => s + r.features.length, 0);
+      const versionList = releases.map(r => r.version).join(', ');
+
+      const catMap = new Map();
+      for (const r of releases) {
+        for (const f of r.features) {
+          const cat = f.tag || '新功能';
+          if (!catMap.has(cat)) catMap.set(cat, []);
+          catMap.get(cat).push(f);
+        }
+      }
+
+      const catsHtml = CAT_ORDER
+        .filter(cat => catMap.has(cat))
+        .map((cat, cIdx) => {
+          const feats = catMap.get(cat);
+          const tag = TAG_MAP[cat] || TAG_MAP['新功能'];
+          return `
+            <div class="category-group">
+              <div class="category-header" onclick="toggleCategory(this)">
+                <span class="toggle-icon${dIdx === 0 ? ' expanded' : ''}">▶</span>
+                <span class="category-label ${tag.cls}">${tag.label}</span>
+                <span class="category-count">${feats.length} 项</span>
+              </div>
+              <div class="category-features${dIdx === 0 ? ' expanded' : ''}">
+                ${renderFeatureGroups(feats, dIdx)}
+              </div>
+            </div>`;
+        }).join('');
+
+      return `
+        <div class="date-group">
+          <div class="date-header" onclick="toggleDate(this)">
+            <span class="toggle-icon${dIdx === 0 ? ' expanded' : ''}">▶</span>
+            <span class="date-label">${esc(date)}</span>
+            <span class="date-count">${versionList} · ${totalFeatures} 项变更</span>
+          </div>
+          <div class="date-releases${dIdx === 0 ? ' expanded' : ''}">
+            ${catsHtml}
+          </div>
+        </div>`;
+    }).join('');
+
+    container.innerHTML = `
+      <section class="month-section" id="${month.monthId}">
+        <div class="month-header">
+          <span class="month-tag">${esc(month.month)}</span>
+          <span class="month-count">${month.releases.length} 个版本 · ${releaseCount} 项变更</span>
+        </div>
+        <div class="month-content expanded">
+          ${datesHtml}
+        </div>
+      </section>`;
+  }
+
+  window.toggleCard = function(el) { el.parentElement.classList.toggle('open'); };
+  window.toggleDate = function(header) {
+    header.nextElementSibling.classList.toggle('expanded');
+    header.querySelector('.toggle-icon').classList.toggle('expanded');
+  };
+  window.toggleCategory = function(header) {
+    header.nextElementSibling.classList.toggle('expanded');
+    header.querySelector('.toggle-icon').classList.toggle('expanded');
+  };
+  window.toggleComponent = function(header) {
+    header.nextElementSibling.classList.toggle('expanded');
+    header.querySelector('.toggle-icon').classList.toggle('expanded');
+  };
+
+  renderNav();
+  renderMonth();
+})();
 </script>
+
 </body>
 </html>
