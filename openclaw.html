@@ -688,6 +688,43 @@ const CHANGELOG_DATA = [
     monthId: "2026-05",
     releases: [
       {
+        version: "v2026.5.10-beta.2",
+        date: "2026-05-10",
+        features: [
+          { title: "Telegram PR 证据自动化", tag: "新功能", summary: "QA/Mantis 新增 Telegram 实时 PR 证据自动化，支持 Crabbox 转录、动图预览和内联 PR 评论", detail: "QA/Mantis: add Telegram live PR evidence automation with Convex-leased credentials, Crabbox transcript capture, motion GIF previews, and inline PR comments.", summaryZh: "QA/Mantis 新增 Telegram 实时 PR 证据自动化，支持 Crabbox 转录、动图预览和内联 PR 评论" },
+          { title: "Discord 实时语音诊断", tag: "新功能", summary: "新增语音诊断功能：说话者轮次、播放重置、打断检测和音频截断分析", detail: "Discord/voice: add realtime voice diagnostics for speaker turns, playback resets, barge-in detection, and audio cutoff analysis.", summaryZh: "新增语音诊断功能：说话者轮次、播放重置、打断检测和音频截断分析" },
+          { title: "实时语音风格指令配置", tag: "新功能", summary: "talk.realtime.instructions 支持在保留内置 agent 指导的同时追加实时语音风格指令", detail: "Talk: add `talk.realtime.instructions` so operators can append realtime voice style instructions while preserving OpenClaw's built-in agent-consult guidance. (#79081) Thanks @VACInc.", summaryZh: "talk.realtime.instructions 支持在保留内置 agent 指导的同时追加实时语音风格指令" },
+          { title: "私有技能归档上传安装", tag: "新功能", summary: "skills.install.allowUploadedArchives 开关控制可信客户端的 zip 技能安装路径", detail: "Gateway/skills: add an opt-in private skill archive upload install path gated by `skills.install.allowUploadedArchives`, so trusted Gateway clients can stage and install zip-backed skills only when operators explicitly enable the code-install surface. (#74430) Thanks @samzong.", summaryZh: "skills.install.allowUploadedArchives 开关控制可信客户端的 zip 技能安装路径" },
+          { title: "子代理会话引用保持", tag: "修复", summary: "压缩和后轮次运行时上下文中保持有作用域的后台 exec/process 会话引用，修复 #79284", detail: "Agents/compaction: preserve scoped background exec/process session references across embedded compaction and after-turn runtime contexts without exposing sessions from unrelated scopes. Fixes #79284. (#79307) Thanks @TurboTheTurtle.", summaryZh: "压缩和后轮次运行时上下文中保持有作用域的后台 exec/process 会话引用" },
+          { title: "Codex 工具配置简化", tag: "优化", summary: "移除可配置的 Codex 动态工具 profile，Codex 始终拥有核心工具集", detail: "Agents/Codex: remove the configurable Codex dynamic-tools profile so Codex app-server always owns workspace, edit, patch, exec, process, and plan tools while OpenClaw integration tools remain available.", summaryZh: "移除可配置的 Codex 动态工具 profile，Codex 始终拥有核心工具集" },
+          { title: "ACPX 启动探针修复", tag: "修复", summary: "默认运行并等待 ACP 后端启动探针，避免 gateway ready 信号在 runtime 就绪前发出", detail: "ACPX: run and await the embedded ACP backend startup probe by default so the gateway `ready` signal no longer fires before the acpx runtime has either become usable or reported a probe failure. Fixes #79596. Thanks @bzelones.", summaryZh: "默认运行并等待 ACP 后端启动探针，避免 gateway ready 信号在 runtime 就绪前发出" },
+        ],
+      },
+      {
+        version: "v2026.5.10-beta.1",
+        date: "2026-05-10",
+        features: [
+          { title: "LLM 空闲看门狗前移", tag: "修复", summary: "在 provider 流建立前即启用 LLM 空闲看门狗，防止流建立前的静默挂起", detail: "Agents: apply the LLM idle watchdog while provider stream setup is still pending, preventing silent pre-stream model hangs from waiting for the full agent timeout.", summaryZh: "在 provider 流建立前即启用 LLM 空闲看门狗，防止流建立前的静默挂起" },
+          { title: "Cron 隔离自清理运行历史", tag: "修复", summary: "隔离的自清理运行可检查自身 job 历史，同时保持其他 cron job 操作阻断，修复 #80019", detail: "Cron: let isolated self-cleanup runs inspect their own job run history while keeping other cron jobs and mutation actions blocked. Fixes #80019. Thanks @hclsys.", summaryZh: "隔离的自清理运行可检查自身 job 历史，同时保持其他 cron job 操作阻断" },
+          { title: "config set/patch 默认值持久化", tag: "修复", summary: "显式设置与运行时默认值相等的配置不再被静默丢弃，修复 #79856", detail: "CLI/config: persist explicit `config set` and `config patch` values that equal runtime defaults instead of reporting success while dropping them. Fixes #79856. (#80106) Thanks @abodanty and @hclsys.", summaryZh: "显式设置与运行时默认值相等的配置不再被静默丢弃" },
+          { title: "OpenAI 实时语音事件兼容", tag: "修复", summary: "接受 Codex 兼容的旧版音频和转录事件别名，防止协议漂移丢弃助手音频", detail: "OpenAI/realtime voice: accept Codex-compatible legacy audio and transcript event aliases so provider protocol drift does not drop assistant audio or captions.", summaryZh: "接受 Codex 兼容的旧版音频和转录事件别名，防止协议漂移丢弃助手音频" },
+          { title: "CLI 引导流程优化", tag: "优化", summary: "setup/onboarding/configure/channel 命令的引导文案改进，指向下一步有用的命令", detail: "CLI/onboarding: improve setup, onboarding, configure, and channel command wayfinding so terminal flows explain the next useful command instead of relying on terse setup labels.", summaryZh: "setup/onboarding/configure/channel 命令的引导文案改进，指向下一步有用的命令" },
+        ],
+      },
+      {
+        version: "v2026.5.9-beta.1",
+        date: "2026-05-09",
+        features: [
+          { title: "/think default 与 /fast default", tag: "新功能", summary: "新增 /think default 和 /fast default 命令清除会话级覆盖，恢复继承配置/provider 默认值", detail: "Chat commands: add `/think default` and `/fast default` to clear session overrides and inherit configured/provider defaults. (#79385) Thanks @VACInc.", summaryZh: "新增 /think default 和 /fast default 命令清除会话级覆盖，恢复继承配置/provider 默认值" },
+          { title: "系统提示注入模型标识", tag: "新功能", summary: "将当前 provider/model 身份注入系统提示（含 CLI hook 替换），agent 可回答模型身份问题", detail: "Agents: inject the current provider/model identity into system prompts, including configured prompt overrides and CLI hook prompt replacements, so agents can answer model-identity questions from the actual runtime selection.", summaryZh: "将当前 provider/model 身份注入系统提示，agent 可回答自身模型身份问题" },
+          { title: "oc-path 插件：openclaw path", tag: "新功能", summary: "新增 oc-path 插件，提供 openclaw path 命令精准访问 workspace 中的 md/JSONC/JSONL 文件", detail: "Plugins/CLI: add the optional bundled `oc-path` plugin, providing `openclaw path` for surgical `oc://` access to markdown, JSONC, and JSONL workspace files.", summaryZh: "新增 oc-path 插件，提供 openclaw path 命令精准访问 workspace 中的 md/JSONC/JSONL 文件" },
+          { title: "统一模型目录注册", tag: "新功能", summary: "Plugin SDK 新增文本/图片/视频/音乐 provider 统一模型目录，含 catalog manifest 和缓存", detail: "Plugins/SDK: add unified model catalog registration for text, image, video, and music providers, including `providerCatalogEntry` manifests, shared media list help, live catalog caching, and per-model video capability overlays.", summaryZh: "Plugin SDK 新增文本/图片/视频/音乐 provider 统一模型目录，含 catalog manifest 和缓存" },
+          { title: "CLI 错误恢复指引增强", tag: "优化", summary: "parser/启动/config/守卫/渠道/agent/任务/session/MCP 失败均附带原因和恢复命令", detail: "CLI: make parser, startup, config, guardrail, channel, agent, task, session, and MCP failures explain what happened and point to the next recovery command.", summaryZh: "各模块失败均附带原因说明和下一步恢复命令" },
+          { title: "Active Memory toolsAllow 配置", tag: "新功能", summary: "自定义 memory 插件可通过 toolsAllow 指定召回工具名，memory_search/memory_get 仍为默认", detail: "Active Memory: support concrete `plugins.entries.active-memory.config.toolsAllow` recall tool names for custom memory plugins while keeping the built-in memory-core default on `memory_search`/`memory_get`.", summaryZh: "自定义 memory 插件可通过 toolsAllow 指定召回工具名" },
+          { title: "ACP agents 配置支持 args 数组", tag: "修复", summary: "agents config 接受可选 args 数组，含空格的路径和标志值不再被截断", detail: "Plugins/ACPX: accept an optional `args` array in `agents.<name>` config so paths and flag values containing spaces stay intact when spawning ACP agent processes. Thanks @TheArchitectit and @BunsDev.", summaryZh: "agents config 接受可选 args 数组，含空格的路径和标志值不再被截断" },
+        ],
+      },
+      {
         version: "v2026.5.7",
         date: "2026-05-07",
         features: [
