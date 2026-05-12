@@ -688,6 +688,41 @@ const CHANGELOG_DATA = [
     monthId: "2026-05",
     releases: [
       {
+        version: "v2026.5.10-beta.5",
+        date: "2026-05-11",
+        features: [
+          { title: "fal GPT Image 2 / Nano Banana 2 编辑支持", tag: "新功能", summary: "fal 路由 GPT Image 2 和 Nano Banana 2 参考图编辑请求至 /edit 端点，支持宽高比和分辨率参数，编辑模式输入上限分别提升至 10 和 14 张", detail: "Providers/fal: route GPT Image 2 and Nano Banana 2 reference-image edit requests to /edit with image_urls array, enforce NB2 edit geometry using aspect_ratio and resolution params, lift Fal edit mode input-image caps to 10 for GPT Image 2 and 14 for Nano Banana 2.", summaryZh: "fal 路由 GPT Image 2 和 Nano Banana 2 参考图编辑请求至 /edit 端点，支持宽高比和分辨率参数，编辑模式输入上限分别提升至 10 和 14 张" },
+          { title: "Fly Machines 容器环境自动检测", tag: "修复", summary: "通过运行时环境变量自动检测 Fly Machines 容器环境，gateway bind 和 Bonjour 默认值匹配远程容器启动", detail: "Runtime/Fly: detect Fly Machines as container environments from their runtime env vars, so gateway bind and Bonjour defaults match remote container launches. (#80209)", summaryZh: "通过运行时环境变量自动检测 Fly Machines 容器环境，gateway bind 和 Bonjour 默认值匹配远程容器启动" },
+          { title: "Control UI 空白页恢复面板", tag: "修复", summary: "当 app 模块未注册时显示 HTML 恢复面板，为空白仪表盘提供重试路径和浏览器扩展排查链接", detail: "Control UI: show a plain HTML recovery panel when the app module never registers, giving blank dashboard pages a retry path and browser-extension troubleshooting link. Fixes #44107.", summaryZh: "当 app 模块未注册时显示 HTML 恢复面板，为空白仪表盘提供重试路径和浏览器扩展排查链接" },
+          { title: "Agent 跨上下文消息限制配置", tag: "新功能", summary: "新增 per-agent tools.message.crossContext 和 tools.message.actions.allow 覆盖，沙箱/公共 agent 可限制消息发送仅限当前会话", detail: "Agents: add per-agent tools.message.crossContext and tools.message.actions.allow overrides so sandboxed/public agents can restrict message sends to the current conversation.", summaryZh: "新增 per-agent 消息工具覆盖配置，沙箱/公共 agent 可限制消息发送仅限当前会话" },
+          { title: "Codex 超时进程回收", tag: "修复", summary: "超时的 Codex app-server 客户端在有界轮次中断后退役，避免 Discord agent 复用 CPU 空转的 Codex 进程", detail: "Codex app-server: retire timed-out app-server clients after bounded turn interrupts so Discord agents do not reuse a CPU-spinning Codex process after an attempt timeout.", summaryZh: "超时的 Codex app-server 客户端在有界轮次中断后退役，避免 Discord agent 复用 CPU 空转的 Codex 进程" },
+          { title: "pnpm 11 工作区升级", tag: "优化", summary: "工作区包管理升级至 pnpm 11，Docker/install/update/release 工作流对齐 pnpm 11 配置", detail: "Build: upgrade workspace package management to pnpm 11 and keep Docker, install, update, and release workflows on the pnpm 11 config surface. (#79414)", summaryZh: "工作区包管理升级至 pnpm 11，Docker/install/update/release 工作流对齐 pnpm 11 配置" },
+          { title: "本地模型服务按需启动", tag: "新功能", summary: "Provider 级 localService 启动支持，在 OpenAI 兼容请求前按需启动本地模型服务，含一次性探针", detail: "Models: add provider-level localService startup for on-demand local model servers before OpenAI-compatible requests, including one-shot model probes.", summaryZh: "Provider 级 localService 启动支持，在 OpenAI 兼容请求前按需启动本地模型服务" },
+        ],
+      },
+      {
+        version: "v2026.5.10-beta.4",
+        date: "2026-05-11",
+        features: [
+          { title: "Plugin Inspector 兼容性分流", tag: "优化", summary: "CI 新增非阻塞 plugin-inspector-advisory 产物，release 运行时捕获内置插件兼容性分流", detail: "CI: add a non-blocking plugin-inspector-advisory artifact to Plugin Prerelease so release runs capture bundled plugin compatibility triage without changing the blocking gate.", summaryZh: "CI 新增非阻塞 plugin-inspector-advisory 产物，release 运行时捕获内置插件兼容性分流" },
+          { title: "Agent 代理链轮次上限提升", tag: "新功能", summary: "session.agentToAgent.maxPingPongTurns 上限提升至 20（默认仍为 5），支持更长的 agent 间回复链", detail: "Agents: allow session.agentToAgent.maxPingPongTurns up to 20 while keeping the default at 5 for longer agent-to-agent reply chains. Fixes #52382.", summaryZh: "session.agentToAgent.maxPingPongTurns 上限提升至 20，支持更长的 agent 间回复链" },
+          { title: "进度预览命令行宽度提升", tag: "优化", summary: "进度草稿命令预览行宽度提升 50%，Discord 内联工具更新保留更多有用的命令上下文", detail: "Agents: widen progress draft command preview lines by 50% so Discord inline tool updates preserve more useful command context.", summaryZh: "进度草稿命令预览行宽度提升 50%，Discord 内联工具更新保留更多命令上下文" },
+          { title: "TypeScript 编译器严格检查", tag: "优化", summary: "启用隐式返回、副作用导入、overrides 和未使用生产代码的更严格编译器检查", detail: "TypeScript: enable stricter compiler checks for implicit returns, side-effect imports, overrides, and unused production code.", summaryZh: "启用隐式返回、副作用导入、overrides 和未使用生产代码的更严格编译器检查" },
+          { title: "模型传输诊断日志", tag: "优化", summary: "新增目标模型传输、payload、SSE 和代码模式诊断，URL 处理自动脱敏", detail: "Logging: add targeted model transport, payload, SSE, and code-mode diagnostics with redacted URL handling.", summaryZh: "新增目标模型传输、payload、SSE 和代码模式诊断，URL 处理自动脱敏" },
+        ],
+      },
+      {
+        version: "v2026.5.10-beta.3",
+        date: "2026-05-11",
+        features: [
+          { title: "/context map 上下文树状图", tag: "新功能", summary: "新增 /context map 命令，发送当前会话上下文贡献者的树状图可视化图片", detail: "Context: add /context map to send a treemap image of the current session context contributors. (#79867)", summaryZh: "新增 /context map 命令，发送当前会话上下文贡献者的树状图可视化图片" },
+          { title: "Slack 链接/媒体预览控制", tag: "新功能", summary: "新增 unfurlLinks 和 unfurlMedia 配置，支持 per-account 覆盖，可抑制 Slack 链接和媒体预览", detail: "Slack: add unfurlLinks and unfurlMedia config for bot chat.postMessage replies, including per-account overrides, so Slack link and media previews can be suppressed.", summaryZh: "新增 unfurlLinks 和 unfurlMedia 配置，支持 per-account 覆盖，可抑制 Slack 链接和媒体预览" },
+          { title: "Slack 线程回复广播", tag: "新功能", summary: "新增 replyBroadcast 支持，agent 可选择将线程回复广播到父频道", detail: "Slack: add explicit replyBroadcast support for text and Block Kit thread replies so agents can opt into Slack's parent-channel reply_broadcast behavior.", summaryZh: "新增 replyBroadcast 支持，agent 可选择将线程回复广播到父频道" },
+          { title: "Slack DM 渠道会话去重", tag: "修复", summary: "规范化原生 DM 渠道 ID 的出站投递镜像路由至对等用户会话，避免同一 DM 线程分裂为渠道会话", detail: "Slack: canonicalize outbound delivery-mirror routes for native DM channel IDs to the peer user session so message.send calls to D... targets do not split the same Slack DM thread.", summaryZh: "规范化原生 DM 渠道 ID 的出站投递镜像路由至对等用户会话，避免同一 DM 线程分裂为渠道会话" },
+          { title: "Plugin SDK 公共子路径清理", tag: "优化", summary: "弃用无生产导入的公共子路径，移除 provider-auth-login 等特定于 owner 的子路径，暴露运行时活跃模型元数据", detail: "Plugin SDK: deprecate public subpaths with no bundled extension production imports, remove owner-specific subpaths, and expose runtime-supplied active model metadata to native plugin tool factories.", summaryZh: "弃用无生产导入的公共子路径，移除 provider-auth-login 等特定于 owner 的子路径，暴露运行时活跃模型元数据" },
+        ],
+      },
+      {
         version: "v2026.5.10-beta.2",
         date: "2026-05-10",
         features: [
