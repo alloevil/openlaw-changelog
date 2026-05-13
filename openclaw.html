@@ -683,6 +683,48 @@ body {
  * Grouped by month. Each month contains multiple releases.
  */
 const CHANGELOG_DATA = [
+{
+        version: "v2026.5.12-beta.3",
+        date: "2026-05-13",
+        features: [
+          { title: "Codex 媒体工具鉴权修复", tag: "修复", summary: "当 OpenAI 认证存储在 auth-profile 而非环境变量时，保持 image_generate 等媒体工具可用", detail: "Codex harness: keep auth-profile-backed media tools such as image_generate available when OpenAI auth lives in the agent's auth-profile store instead of environment variables.", summaryZh: "当 OpenAI 认证存储在 auth-profile 而非环境变量时，保持 image_generate 等媒体工具可用" },
+          { title: "Memory Wiki 安全权限收紧", tag: "修复", summary: "Memory Wiki ingest 操作要求 admin 权限，Obsidian 搜索要求 write 权限", detail: "fix(memory-wiki): require admin scope for ingest; memory-wiki: require write scope for Obsidian search.", summaryZh: "Memory Wiki ingest 操作要求 admin 权限，Obsidian 搜索要求 write 权限" },
+          { title: "子代理会话树状展示", tag: "优化", summary: "Control UI 会话选择器中子代理会话以 └─ 前缀嵌套显示父级关系", detail: "Control UI/sessions: nest subagent sessions under their parent session in the session picker dropdown using a visual └─ prefix, making the parent-child relationship clear.", summaryZh: "Control UI 会话选择器中子代理会话以 └─ 前缀嵌套显示父级关系" },
+          { title: "自动回复模型故障可见提示", tag: "修复", summary: "模型后端失败且 fallback 无输出时显示可见错误，保留静默轮次行为", detail: "Auto-reply: surface a visible error when the configured model backend fails and fallback produces no visible reply, while preserving intentional silent turns and side-effect-only deliveries.", summaryZh: "模型后端失败且 fallback 无输出时显示可见错误，保留静默轮次行为" },
+          { title: "子代理心跳去重", tag: "修复", summary: "跳过子代理 exec 完成时的冗余心跳唤醒，避免父会话产生多余 LLM 调用", detail: "Agents/exec: skip redundant heartbeat wake-ups for subagent session exec completions, preventing spurious LLM invocations on parent sessions.", summaryZh: "跳过子代理 exec 完成时的冗余心跳唤醒，避免父会话产生多余 LLM 调用" },
+          { title: "Provider 流稳定性增强", tag: "修复", summary: "OpenAI 兼容 SSE 流跨分块持续排空，Azure Responses 流以有界首事件诊断代替挂起", detail: "Provider streams: keep OpenAI-compatible SSE and JSON fallback streams draining across split chunks and fail Azure Responses streams with a bounded first-event diagnostic instead of stalling.", summaryZh: "OpenAI 兼容 SSE 流跨分块持续排空，Azure Responses 流以有界首事件诊断代替挂起" },
+          { title: "WhatsApp libsignal 依赖兼容", tag: "修复", summary: "允许 Baileys 锁定的 libsignal git 子依赖在 pnpm 11 下正常安装", detail: "WhatsApp/install: allow Baileys' pinned libsignal git subdependency under pnpm 11 so source installs and local checks can complete.", summaryZh: "允许 Baileys 锁定的 libsignal git 子依赖在 pnpm 11 下正常安装" },
+          { title: "构建产物元数据修复", tag: "修复", summary: "跳过构建排除的内置插件复制元数据，避免更新/状态重建声明缺失的 QQ Bot 运行时文件", detail: "Build: skip copied metadata for bundled plugins that are excluded from build entries, preventing update/status rebuilds from advertising missing QQ Bot runtime files.", summaryZh: "跳过构建排除的内置插件复制元数据，避免更新/状态重建声明缺失的 QQ Bot 运行时文件" },
+        ],
+      },
+      {
+        version: "v2026.5.12-beta.2",
+        date: "2026-05-13",
+        features: [
+          { title: "OpenAI HTTP 请求 token 上限透传", tag: "新功能", summary: "网关 /v1/chat/completions 端点支持 max_completion_tokens 和 max_tokens 透传至上游 provider", detail: "Gateway/OpenAI HTTP: honor max_completion_tokens and max_tokens on inbound /v1/chat/completions requests so client-provided token caps reach the upstream provider via streamParams.maxTokens.", summaryZh: "网关 /v1/chat/completions 端点支持 max_completion_tokens 和 max_tokens 透传至上游 provider" },
+          { title: "Cron 任务按 ID 查询", tag: "新功能", summary: "新增 cron.get 接口和 openclaw cron get <id> 命令，支持按 ID 检查单个定时任务", detail: "Cron: add direct cron.get, openclaw cron get <id>, and agent-tool get support for inspecting one stored cron job by id.", summaryZh: "新增 cron.get 接口和 openclaw cron get <id> 命令，支持按 ID 检查单个定时任务" },
+          { title: "按发送者工具策略", tag: "新功能", summary: "新增 per-sender 工具策略，支持按渠道级发送者 key 限制危险工具的使用权限", detail: "Agents/tools: add per-sender tool policies with canonical channel-scoped sender keys, so operators can restrict dangerous tools by requester identity.", summaryZh: "新增 per-sender 工具策略，支持按渠道级发送者 key 限制危险工具的使用权限" },
+          { title: "ACP 子代理图谱元数据", tag: "新功能", summary: "通过 ACP 会话列表和快照暴露 Gateway 会话谱系元数据，客户端可直接渲染子代理图谱", detail: "ACP: expose Gateway session lineage metadata through ACP session listings and session info snapshots so clients can render subagent graphs.", summaryZh: "通过 ACP 会话列表和快照暴露 Gateway 会话谱系元数据，客户端可直接渲染子代理图谱" },
+          { title: "fal GPT Image 2 / Nano Banana 2 编辑", tag: "新功能", summary: "fal 路由 GPT Image 2 和 Nano Banana 2 参考图编辑请求至 /edit 端点，编辑模式输入上限分别提升至 10 和 14 张", detail: "Providers/fal: route GPT Image 2 and Nano Banana 2 reference-image edit requests to /edit with image_urls array, enforce NB2 edit geometry using aspect_ratio and resolution params, lift Fal edit mode input-image caps to 10 for GPT Image 2 and 14 for Nano Banana 2.", summaryZh: "fal 路由 GPT Image 2 和 Nano Banana 2 参考图编辑请求至 /edit 端点，编辑模式输入上限分别提升至 10 和 14 张" },
+          { title: "OpenAI CLI 认证默认 ChatGPT 登录", tag: "优化", summary: "openclaw models auth login --provider openai 默认启动 ChatGPT/Codex 账户登录，--method api-key 为显式 API Key 路径", detail: "Models/OpenAI CLI auth: make openclaw models auth login --provider openai start the ChatGPT/Codex account login by default, while --method api-key remains the explicit OpenAI API-key setup path.", summaryZh: "openclaw models auth login --provider openai 默认启动 ChatGPT/Codex 账户登录" },
+          { title: "iMessage 渠道状态过滤", tag: "优化", summary: "新增 openclaw channels status --channel <name> 过滤，文档化 BlueBubbles 到 imsg 的迁移路径", detail: "Channels/iMessage: add openclaw channels status --channel <name> filtering and document the BlueBubbles-to-imsg cutover path.", summaryZh: "新增 openclaw channels status --channel <name> 过滤，文档化 BlueBubbles 到 imsg 的迁移路径" },
+          { title: "子代理 announceTimeoutMs 文档化", tag: "优化", summary: "在子代理和配置参考中记录 agents.defaults.subagents.announceTimeoutMs 配置项", detail: "Docs/subagents: document agents.defaults.subagents.announceTimeoutMs in the sub-agent and configuration references.", summaryZh: "在子代理和配置参考中记录 agents.defaults.subagents.announceTimeoutMs 配置项" },
+        ],
+      },
+      {
+        version: "v2026.5.12-beta.1",
+        date: "2026-05-13",
+        features: [
+          { title: "Agent 消息工具精细控制", tag: "新功能", summary: "新增 per-agent tools.message.crossContext 和 tools.message.actions.allow 覆盖，沙箱/公共 agent 可限制消息发送范围", detail: "Agents: add per-agent tools.message.crossContext and tools.message.actions.allow overrides so sandboxed/public agents can restrict message sends to the current conversation.", summaryZh: "新增 per-agent 消息工具覆盖配置，沙箱/公共 agent 可限制消息发送仅限当前会话" },
+          { title: "/context map 上下文树状图", tag: "新功能", summary: "新增 /context map 命令，发送当前会话上下文贡献者的树状图可视化图片", detail: "Context: add /context map to send a treemap image of the current session context contributors.", summaryZh: "新增 /context map 命令，发送当前会话上下文贡献者的树状图可视化图片" },
+          { title: "Slack 链接/媒体预览控制", tag: "新功能", summary: "新增 unfurlLinks 和 unfurlMedia 配置，支持 per-account 覆盖，可抑制 Slack 链接和媒体预览", detail: "Slack: add unfurlLinks and unfurlMedia config for bot chat.postMessage replies, including per-account overrides, so Slack link and media previews can be suppressed.", summaryZh: "新增 unfurlLinks 和 unfurlMedia 配置，支持 per-account 覆盖，可抑制 Slack 链接和媒体预览" },
+          { title: "Slack 线程回复广播", tag: "新功能", summary: "新增 replyBroadcast 支持，agent 可选择将线程回复广播到父频道", detail: "Slack: add explicit replyBroadcast support for text and Block Kit thread replies so agents can opt into Slack's parent-channel reply_broadcast behavior.", summaryZh: "新增 replyBroadcast 支持，agent 可选择将线程回复广播到父频道" },
+          { title: "Plugin SDK 活跃模型元数据暴露", tag: "新功能", summary: "Plugin SDK 向原生插件工具工厂暴露运行时活跃模型元数据，支持诊断和插件策略决策", detail: "Plugin SDK: expose runtime-supplied active model metadata to native plugin tool factories for diagnostics and plugin-owned policy decisions.", summaryZh: "Plugin SDK 向原生插件工具工厂暴露运行时活跃模型元数据，支持诊断和插件策略决策" },
+          { title: "私有技能归档上传安装", tag: "新功能", summary: "skills.install.allowUploadedArchives 开关控制可信客户端的 zip 技能安装路径", detail: "Gateway/skills: add an opt-in private skill archive upload install path gated by skills.install.allowUploadedArchives.", summaryZh: "skills.install.allowUploadedArchives 开关控制可信客户端的 zip 技能安装路径" },
+          { title: "子代理会话引用保持", tag: "修复", summary: "压缩和后轮次运行时上下文中保持有作用域的后台 exec/process 会话引用", detail: "Agents/compaction: preserve scoped background exec/process session references across embedded compaction and after-turn runtime contexts without exposing sessions from unrelated scopes.", summaryZh: "压缩和后轮次运行时上下文中保持有作用域的后台 exec/process 会话引用" },
+          { title: "Codex 超时进程回收", tag: "修复", summary: "超时的 Codex app-server 客户端在有界轮次中断后退役，避免 Discord agent 复用 CPU 空转的 Codex 进程", detail: "Codex app-server: retire timed-out app-server clients after bounded turn interrupts so Discord agents do not reuse a CPU-spinning Codex process after an attempt timeout.", summaryZh: "超时的 Codex app-server 客户端在有界轮次中断后退役，避免 Discord agent 复用 CPU 空转的 Codex 进程" },
+        ],
+      },
   {
     month: "2026 年 5 月",
     monthId: "2026-05",
