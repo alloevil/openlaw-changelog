@@ -684,6 +684,49 @@ body {
  */
 const CHANGELOG_DATA = [
 {
+        version: "v2026.5.12-beta.6",
+        date: "2026-05-13",
+        features: [
+          { title: "iMessage 媒体消息修复", tag: "修复", summary: "修复原生图片发送时可见 <media:image> 占位符文本问题，同时保留防自回复重复的内部 echo key", detail: "iMessage: stop sending visible <media:image> placeholder text for media-only native image sends while preserving the internal echo key that prevents self-echo duplicate replies.", summaryZh: "修复原生图片发送时可见占位符文本问题" },
+          { title: "子代理会话预创建", tag: "修复", summary: "在首次 sessions_send 或网关发送前自动创建已配置的 agent 主会话，避免 agent-to-agent 消息因目标未启动而失败", detail: "Agents/sessions: create configured agent main sessions before first sessions_send or gateway send, so agent-to-agent messages no longer fail when the target agent has not started yet.", summaryZh: "自动创建子代理主会话，避免跨代理消息因目标未启动而失败" },
+          { title: "Gateway 协议 v4 升级", tag: "优化", summary: "要求 v4 客户端，流式传输显式 deltaText/replace 帧，SDK 客户端无需本地 diff 即可消费助手更新", detail: "Gateway protocol: require v4 clients and stream explicit chat deltaText/replace frames so SDK clients can consume assistant updates without local diffing.", summaryZh: "Gateway 协议 v4：流式 deltaText/replace 帧，SDK 客户端无需本地 diff" },
+          { title: "GitHub Copilot 图片理解修复", tag: "修复", summary: "Copilot OAuth token 交换为 API token 处理图片请求，修复 Gemini 图片描述功能", detail: "GitHub Copilot: exchange OAuth tokens for Copilot API tokens on image understanding requests and route Gemini image payloads through Chat Completions.", summaryZh: "修复 Copilot Gemini 图片描述功能" },
+          { title: "Node 配对安全加固", tag: "安全", summary: "隐藏待审批的 Node 配对命令、能力和权限，审批通过后刷新可用界面；设备配对、浏览器配对、Control UI 均需显式审批", detail: "Gateway: hide pending Node pairing commands until approval; Require approval for setup-code device pairing, explicit browser device pairing, and Control UI pairing before proxy-scoped access.", summaryZh: "设备配对、浏览器、Control UI 均需显式审批，隐藏待审批命令" },
+          { title: "飞书/WhatsApp/Line 媒体大小限制", tag: "修复", summary: "读取下载流时强制入站媒体大小上限，避免超大附件的完整缓冲", detail: "Plugins/Feishu/WhatsApp/Line: enforce inbound media size caps while reading download streams, avoiding full buffering of oversized attachments.", summaryZh: "读取下载流时强制入站媒体大小上限，避免超大附件缓冲" },
+          { title: "插件安装安全扫描优化", tag: "优化", summary: "将安装时代码安全扫描限制在插件自身运行时入口点，保留依赖清单黑名单检查，避免大型依赖树的可信包被误拦截", detail: "Plugins/install: limit install-time code safety scans to plugin-owned runtime entrypoints while keeping dependency manifest denylist checks.", summaryZh: "安装时安全扫描限制在插件入口点，避免大型依赖树被误拦截" },
+          { title: "配置并发变更序列化", tag: "修复", summary: "集中序列化和重试语义配置变更，支持并发命令 rebase 安全变更而非覆盖", detail: "Config: serialize and retry semantic config mutations centrally, so concurrent commands can rebase safe changes instead of clobbering.", summaryZh: "配置并发变更集中序列化重试，避免覆盖冲突" },
+          { title: "Claude CLI 会话记忆修复", tag: "修复", summary: "会话轮转后从有界 OpenClaw 转录历史重新种子 Claude CLI 新会话重试，防止对话失忆", detail: "Anthropic: reseed Claude CLI fresh-session retries from bounded OpenClaw transcript history after session rotation, preventing conversation amnesia.", summaryZh: "会话轮转后重新种子历史记录，防止 Claude CLI 对话失忆" },
+          { title: "Docker 路径固定", tag: "修复", summary: "固定安装时容器路径，防止过时的宿主机 .env OpenClaw 路径泄漏到 Linux 容器", detail: "Docker: pin setup-time container paths so stale host .env OpenClaw paths cannot leak into Linux containers.", summaryZh: "固定容器路径，防止宿主机 .env 路径泄漏" },
+        ],
+      },
+      {
+        version: "v2026.5.12-beta.5",
+        date: "2026-05-13",
+        features: [
+          { title: "子代理数组参数 Schema 修复", tag: "修复", summary: "为数组工具参数添加宽松 items schema，防止 OpenAI 兼容验证拒绝省略 items 的插件工具", detail: "Agents: add permissive item schemas to array tool parameters before provider submission, preventing OpenAI-compatible schema validation from rejecting plugin tools that omit items.", summaryZh: "数组工具参数添加宽松 items schema，防止插件工具被拒绝" },
+          { title: "LLM 空闲看门狗超时优化", tag: "修复", summary: "LLM 空闲看门狗超时通过 profile 轮转和配置模型 fallback 升级，而非直接终止", detail: "Agents: escalate LLM idle watchdog timeouts through profile rotation and configured model fallback instead of leaving agent stuck.", summaryZh: "LLM 空闲看门狗超时通过 profile 轮转和 fallback 升级" },
+          { title: "子代理同进程完成交接", tag: "优化", summary: "同进程子代理完成交接通过进程内 agent 分发器传递，不再打开 Gateway RPC 回环", detail: "Agents: deliver same-process subagent completion handoffs through the in-process agent dispatcher instead of opening a Gateway RPC loopback.", summaryZh: "子代理完成交接走进程内分发器，避免 Gateway RPC 回环" },
+          { title: "可信代理源验证加固", tag: "安全", summary: "加固可信代理源验证，提升安全性", detail: "Harden trusted-proxy source validation.", summaryZh: "加固可信代理源验证" },
+          { title: "Provider 内部错误友好提示", tag: "优化", summary: "将通用 provider 内部错误（含支持请求 ID）改写为用户友好的瞬态错误提示", detail: "Agents: rewrite generic provider internal errors with support request IDs into user-friendly transient error copy.", summaryZh: "Provider 内部错误改写为用户友好提示" },
+          { title: "WhatsApp 消息排空修复", tag: "修复", summary: "关闭 socket 前完成处理待去重的入站消息", detail: "WhatsApp: finish handling pending debounced inbound messages before closing the socket.", summaryZh: "关闭 socket 前完成待处理消息排空" },
+          { title: "Telegram HTML 标签保留", tag: "修复", summary: "保留可见回复和持久镜像中支持的 HTML 标签，格式化消息正确渲染而非降级为转义文本", detail: "Telegram: preserve supported HTML tags in visible replies and durable mirrors so formatted messages render correctly.", summaryZh: "保留 Telegram 格式化消息的 HTML 标签" },
+        ],
+      },
+      {
+        version: "v2026.5.12-beta.4",
+        date: "2026-05-13",
+        features: [
+          { title: "Codex 运行时 SDK 修复", tag: "修复", summary: "允许已安装的 @openclaw/codex 包使用私有 task-runtime SDK helper，修复迁移 OpenAI/Codex beta 运行时的 MODULE_NOT_FOUND 错误", detail: "Codex runtime: allow the official installed @openclaw/codex package to use its private task-runtime SDK helper, fixing MODULE_NOT_FOUND during migrated OpenAI/Codex beta runs.", summaryZh: "修复 Codex 运行时迁移时的 MODULE_NOT_FOUND 错误" },
+          { title: "Codex 迁移复选框交互修复", tag: "修复", summary: "Enter 键激活高亮复选框行后再继续，确保 Skip for now 和批量选择在预选项目时正常工作", detail: "Codex migration: make Enter activate the highlighted checkbox row before continuing, so Skip for now and bulk-selection rows work even when planned items start preselected.", summaryZh: "修复 Codex 迁移向导的复选框交互" },
+          { title: "Provider 流稳定性增强", tag: "修复", summary: "OpenAI 兼容 SSE 流跨分块持续排空，Azure Responses 流以有界首事件诊断代替挂起", detail: "Provider streams: keep OpenAI-compatible SSE and JSON fallback streams draining across split chunks and fail Azure Responses streams with a bounded first-event diagnostic instead of stalling.", summaryZh: "SSE 流跨分块排空，Azure Responses 流有界诊断代替挂起" },
+          { title: "WhatsApp libsignal 依赖兼容", tag: "修复", summary: "允许 Baileys 锁定的 libsignal git 子依赖在 pnpm 11 下正常安装", detail: "WhatsApp/install: allow Baileys' pinned libsignal git subdependency under pnpm 11 so source installs and local checks can complete.", summaryZh: "pnpm 11 下 libsignal 依赖安装兼容" },
+          { title: "Telegram HTML 标签保留", tag: "修复", summary: "保留可见回复和持久镜像中支持的 HTML 标签，格式化消息正确渲染而非降级为转义文本", detail: "Telegram: preserve supported HTML tags in visible replies and durable mirrors so formatted messages render correctly.", summaryZh: "保留 Telegram 格式化消息的 HTML 标签" },
+          { title: "构建产物元数据修复", tag: "修复", summary: "跳过构建排除的内置插件复制元数据，避免更新/状态重建声明缺失的 QQ Bot 运行时文件", detail: "Build: skip copied metadata for bundled plugins that are excluded from build entries, preventing update/status rebuilds from advertising missing QQ Bot runtime files.", summaryZh: "跳过构建排除插件的元数据，避免声明缺失文件" },
+          { title: "OpenAI HTTP max_tokens 透传", tag: "新功能", summary: "网关 /v1/chat/completions 端点支持 max_completion_tokens 和 max_tokens 透传至上游 provider", detail: "Gateway/OpenAI HTTP: honor max_completion_tokens and max_tokens on inbound /v1/chat/completions requests.", summaryZh: "网关支持客户端 max_tokens 透传至上游 provider" },
+          { title: "OpenAI CLI 认证默认 ChatGPT 登录", tag: "优化", summary: "openclaw models auth login --provider openai 默认启动 ChatGPT/Codex 账户登录，--method api-key 为显式 API Key 路径", detail: "Models/OpenAI CLI auth: make openclaw models auth login --provider openai start the ChatGPT/Codex account login by default.", summaryZh: "OpenAI CLI 认证默认走 ChatGPT 登录流程" },
+        ],
+      },
+      {
         version: "v2026.5.12-beta.3",
         date: "2026-05-13",
         features: [
