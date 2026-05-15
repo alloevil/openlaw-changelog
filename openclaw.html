@@ -684,6 +684,35 @@ body {
  */
 const CHANGELOG_DATA = [
 {
+        version: "v2026.5.14-beta.1",
+        date: "2026-05-14",
+        features: [
+          { title: "依赖精简与代理路由", tag: "优化", summary: "根级代理 agent 路由通过 @openclaw/proxyline，移除 proxy-agent 等冗余依赖", detail: "Dependencies: route root ambient Node proxy agents through @openclaw/proxyline and drop root proxy-agent, https-proxy-agent, and minimatch dependencies.", summaryZh: "根级代理 agent 路由通过 @openclaw/proxyline，移除冗余依赖" },
+          { title: "Codex 会话绑定", tag: "新功能", summary: "支持 node 端 Codex CLI 会话列表与绑定，OpenClaw 对话可接管已有 Codex CLI 会话", detail: "Codex: add node-backed Codex CLI session listing and binding so an OpenClaw conversation can continue an existing Codex CLI session running on a paired node.", summaryZh: "支持 node 端 Codex CLI 会话列表与绑定，OpenClaw 对话可接管已有会话" },
+          { title: "消息队列转向控制", tag: "新功能", summary: "中轮次提示默认转向活跃运行（/queue steer），保留 /queue followup 和 /queue collect 模式", detail: "Messages/queue: make mid-turn prompts steer active runs by default via /queue steer, preserve /queue followup and /queue collect for users who want messages to queue by default.", summaryZh: "中轮次提示默认转向活跃运行，保留队列收集模式" },
+          { title: "Voice Call/Telnyx 实时语音", tag: "新功能", summary: "新增 Telnyx 实时媒体流通话支持", detail: "Voice Call/Telnyx: add realtime media-streaming call support for conversational voice calls. (#81024)", summaryZh: "新增 Telnyx 实时媒体流通话支持" },
+          { title: "子代理任务可见性", tag: "优化", summary: "sessions_spawn 原生任务在子会话首条可见消息中展示，委托可审计且不重复 token", detail: "Agents/subagents: deliver native sessions_spawn tasks in the child session's first visible [Subagent Task] message instead of hiding the task in the sub-agent system prompt, keeping delegation auditable without duplicating tokens.", summaryZh: "sessions_spawn 任务在子会话首条消息中展示，委托可审计且不重复 token" },
+          { title: "状态反应 emoji 重设计", tag: "优化", summary: "WhatsApp 状态反应接人生命周期（🧠思考/🛠️工具/✅完成/❌错误），新增 deploy/build/concierge 分类", detail: "Channels/status reactions: wire StatusReactionController into WhatsApp message turns with deploy/build/concierge emoji categories, replacing defaults with self-explanatory emoji so stall and lifecycle reactions read as status indicators.", summaryZh: "WhatsApp 状态反应接人生命周期，新增 emoji 分类作为状态指示器" },
+          { title: "文本大小本地设置", tag: "新功能", summary: "Control UI 新增浏览器本地 Text size 设置，缩放聊天和密集 UI 文本", detail: "Control UI: add a browser-local Text size setting in Appearance and Quick Settings, scaling chat and dense UI text while keeping inputs above the mobile Safari focus-zoom threshold.", summaryZh: "Control UI 新增浏览器本地 Text size 设置，缩放 UI 文本" },
+          { title: "Codex 轻量上下文调度", tag: "修复", summary: "精确命令定时任务默认轻量启动上下文，先执行命令再加载工作区身份和记忆", detail: "Cron/Codex: default exact-command scheduled agent turns to lightweight bootstrap context so automation runs the command before loading workspace identity or memory context.", summaryZh: "精确命令定时任务默认轻量启动上下文，先执行命令再加载身份" },
+        ],
+      },
+{
+        version: "v2026.5.12",
+        date: "2026-05-14",
+        features: [
+          { title: "依赖外部化瘦身", tag: "优化", summary: "WhatsApp/Slack/Bedrock/Anthropic Vertex 等插件依赖外置，仅安装所需组件", detail: "Leaner installs: WhatsApp, Slack, Amazon Bedrock, Anthropic Vertex, and related provider/plugin dependency cones moved out of the core runtime so installs only pull what you use.", summaryZh: "核心依赖瘦身：插件依赖外置，仅安装所需组件" },
+          { title: "Telegram 韧性大幅增强", tag: "优化", summary: "隔离轮询、本地持久化队列、安全群组媒体处理，流式和定时回复保留 HTML/Markdown 格式", detail: "Telegram got much more resilient: isolated polling, durable local spooling, safer group-media handling, and preserved HTML/Markdown formatting in streamed and scheduled replies.", summaryZh: "隔离轮询、本地持久化队列、安全群组媒体处理，格式化回复不再降级" },
+          { title: "Codex/OpenAI 路径优化", tag: "优化", summary: "auth-profile 媒体工具、MCP 服务投影、上下文引擎线程轮转、更好的 app-server/runtime fallback", detail: "Codex/OpenAI paths are smoother: auth-profile-backed media tools, MCP server projection, context-engine thread rotation, and better app-server/runtime fallback behavior.", summaryZh: "auth-profile 媒体工具、MCP 服务投影、上下文引擎线程轮转等优化" },
+          { title: "插件安装可靠性提升", tag: "修复", summary: "pnpm 11 支持、peer 依赖保留、更安全的运行时扫描、源码/git 安装修复", detail: "Plugin installs and updates are harder to wedge, with pnpm 11 support, peer-dependency preservation, safer runtime scans, and source/git install fixes.", summaryZh: "pnpm 11 支持、peer 依赖保留、更安全的运行时扫描" },
+          { title: "广泛安全加固", tag: "安全", summary: "Gateway/browser/Slack/节点配对/沙箱/转录路径全面安全与溯源加固", detail: "Gateway, browser, Slack, node pairing, sandbox, and transcript paths picked up a broad security/provenance hardening pass.", summaryZh: "Gateway/browser/Slack/节点配对/沙箱/转录路径全面安全加固" },
+          { title: "Control UI 自动滚动模式", tag: "新功能", summary: "新增持久化自动滚动模式选择器：保持当前行为/始终跟随流式/手动 New messages 按钮", detail: "Control UI/WebChat: add a persisted auto-scroll mode selector so users can keep the current near-bottom behavior, always follow streaming output, or turn automatic streaming scroll off and use the New messages button manually.", summaryZh: "新增持久化自动滚动模式选择器，三种模式可选" },
+          { title: "ACP Fallback 机制", tag: "新功能", summary: "新增 acp.fallbacks 配置，主后端不可用时自动尝试备用运行时后端", detail: "ACP: add acp.fallbacks so ACP turns can try configured backup runtime backends when the primary backend is unavailable before any output is emitted.", summaryZh: "新增 acp.fallbacks 配置，主后端不可用时自动尝试备用运行时" },
+          { title: "Windows 沙箱凭证保护", tag: "安全", summary: "沙箱阻止 Windows USERPROFILE 绑定，防止 .codex/.openclaw/.ssh 等凭证目录泄漏", detail: "Security/sandbox: include Windows USERPROFILE in the sandbox blocked home roots so credential-bearing binds are denied even when HOME points at a different shell home.", summaryZh: "沙箱阻止 Windows USERPROFILE 绑定，防止凭证目录泄漏" },
+          { title: "子代理默认模型优先级修复", tag: "修复", summary: "sessions_spawn 时 agents.defaults.subagents.model 优先于目标 agent 主模型，保持 claude-cli 等运行时附着", detail: "Agents/subagents: apply agents.defaults.subagents.model before target agent primary models during sessions_spawn, so model-scoped runtimes such as claude-cli stay attached to default child runs.", summaryZh: "sessions_spawn 时子代理默认模型优先于目标 agent 主模型" },
+        ],
+      },
+{
         version: "v2026.5.12-beta.6",
         date: "2026-05-13",
         features: [
